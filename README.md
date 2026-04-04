@@ -77,5 +77,9 @@ For questionnaire items that require a **documented Information Security Policy*
 - **File:** [`information-security-policy.md`](information-security-policy.md)  
 - **GitHub (rendered):** https://github.com/Chani1228/blovault-web/blob/main/information-security-policy.md  
 - **After GitHub Pages:** `https://chani1228.github.io/blovault-web/view.html?f=information-security-policy.md`  
+- **PDF (committed in this repo):** [`information-security-policy.pdf`](information-security-policy.pdf) — also via  
+  `https://github.com/Chani1228/blovault-web/raw/main/information-security-policy.pdf` for direct download.
 
-Export to **PDF** from GitHub (Print → Save as PDF) or any Markdown→PDF tool if the portal requires PDF upload.
+Regenerate after editing the `.md` (from **blo-vault** repo root, with `fpdf2` + `markdown` installed):
+
+`python3 scripts/export_information_security_policy_pdf.py --url https://raw.githubusercontent.com/Chani1228/blovault-web/main/information-security-policy.md -o /path/to/blovault-web/information-security-policy.pdf`
