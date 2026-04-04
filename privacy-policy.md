@@ -1,8 +1,12 @@
 # BLO VAULT Privacy Policy
 
-**Last updated:** 2026-04-02
+**Last updated:** 2026-04-04
 
-**In-app copy:** Open the BLO VAULT app → **Settings** → **Data & Privacy** → **Privacy Policy** to read this policy inside the application.
+**In-app:** Open the BLO VAULT app → **Settings** → **Data & Privacy** → **Privacy Policy** to read this policy inside the application.
+
+**Public copy (this page):**  
+https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md  
+(Use this URL for partner disclosures, e.g. Plaid.)
 
 ---
 
@@ -26,7 +30,7 @@ You have the right to: (a) know what personal data we collect; (b) delete your p
 
 ## 5. DATA DELETION
 
-Use "Panic Delete" in Settings to permanently wipe all data from your device and request deletion of your Supabase account data.
+Use **Panic Delete** in Settings to permanently wipe all data from your device and request deletion of your Supabase account data.
 
 ## 6. CONTACT
 

@@ -1,8 +1,11 @@
 # BLO VAULT Terms of Service
 
-**Last updated:** 2026-04-02
+**Last updated:** 2026-04-04
 
-**In-app copy:** Open the BLO VAULT app → **Settings** → **Data & Privacy** → **Terms of Service** to read these terms inside the application.
+**In-app:** Open the BLO VAULT app → **Settings** → **Data & Privacy** → **Terms of Service** to read these terms inside the application.
+
+**Public copy (this page):**  
+https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md
 
 ---
 
