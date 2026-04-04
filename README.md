@@ -39,6 +39,8 @@ Mirrors the shipping **blo-vault** app repo at a high level (not legal advice).
 
 In the mobile app, the same texts are under **Settings → Data & Privacy → Privacy Policy / Terms of Service**.
 
+**Planned upgrades** (domain email, legal finalization, security hardening): see **[FUTURE.md](FUTURE.md)**.
+
 ---
 
 ## Plaid dashboard (quick paste)
@@ -47,5 +49,4 @@ In the mobile app, the same texts are under **Settings → Data & Privacy → Pr
 |--------|--------|
 | Privacy Policy URL | `https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md` |
 | Terms of Service URL | `https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md` |
-| Privacy / product contact | `privacy@blovault.com` (use an inbox you monitor) |
-| Vulnerability disclosure (e.g. security questionnaire) | Use a dedicated address you check (e.g. `security@blovault.com`) |
+| Support / privacy / security (temporary) | `chan.hong1228@gmail.com` — single inbox until `@blovault.com` addresses exist |

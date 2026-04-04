@@ -34,7 +34,8 @@ Use **Panic Delete** in Settings to permanently wipe all data from your device a
 
 ## 6. CONTACT
 
-privacy@blovault.com
+**Temporary (no `@blovault.com` yet):** [chan.hong1228@gmail.com](mailto:chan.hong1228@gmail.com)  
+Privacy, support, and security reports use this address until dedicated role inboxes are set up (see [FUTURE.md](FUTURE.md)).
 
 ---
 
