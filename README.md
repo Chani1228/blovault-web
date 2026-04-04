@@ -69,3 +69,13 @@ Security researchers may report issues to **chan.hong1228@gmail.com**. Include s
 | Privacy Policy URL | `https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md` — or after Pages: `https://chani1228.github.io/blovault-web/privacy-policy.html` |
 | Terms of Service URL | `https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md` — or after Pages: `https://chani1228.github.io/blovault-web/terms-of-service.html` |
 | Support / privacy / security (temporary) | `chan.hong1228@gmail.com` — single inbox until `@blovault.com` addresses exist |
+
+### Plaid — Information Security Policy (attachment)
+
+For questionnaire items that require a **documented Information Security Policy** (e.g. operationalized program to identify, mitigate, and monitor risks), attach or link:
+
+- **File:** [`information-security-policy.md`](information-security-policy.md)  
+- **GitHub (rendered):** https://github.com/Chani1228/blovault-web/blob/main/information-security-policy.md  
+- **After GitHub Pages:** `https://chani1228.github.io/blovault-web/view.html?f=information-security-policy.md`  
+
+Export to **PDF** from GitHub (Print → Save as PDF) or any Markdown→PDF tool if the portal requires PDF upload.
