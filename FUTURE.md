@@ -6,6 +6,7 @@
 
 - [ ] **`@blovault.com` 메일** — `privacy@`, `support@`, `security@`(또는 역할 분리) 개설 후 앱·정책·Plaid·스토어 전부 교체
 - [ ] **대표 연락처 단일화** — 스토어, Plaid, 취약점 공시(VDP) 문구와 동일 주소 사용
+- [ ] **공식 VDP** — `security@` 또는 보안 페이지; README 임시 Gmail 문구 교체
 - [ ] (선택) **GitHub Pages 커스텀 도메인** — 예: `legal.blovault.com` → 이 레포 Pages
 
 ## 법무 / 정책

@@ -35,13 +35,19 @@ Mirrors the shipping **blo-vault** app repo at a high level (not legal advice).
 | Document | GitHub (rendered) | Raw |
 |----------|-------------------|-----|
 | **Privacy Policy** | [privacy-policy.md](https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md) | Expanded for **Plaid / App Store / Play** review: collection categories, subprocessors, retention, rights, children, international |
-| **Terms of Service** | [terms-of-service.md](https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md) | Same path — use for “Terms URL” |
+| **Terms of Service** | [terms-of-service.md](https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md) | Subscriptions/refunds (platform rules), service changes, liability cap, Delaware + informal dispute step |
 
 In the mobile app, the same substance is under **Settings → Data & Privacy → Privacy Policy** (bundled `assets/legal/privacy_policy.txt`).
 
 **Store consoles:** align **Apple Privacy Nutrition Labels** and **Google Play Data safety** with Privacy Policy §3 — mismatches are a common rejection reason, not “policy length” alone.
 
 **Planned upgrades** (domain email, legal finalization, security hardening): see **[FUTURE.md](FUTURE.md)**.
+
+---
+
+## Vulnerability disclosure (temporary)
+
+Security researchers may report issues to **chan.hong1228@gmail.com**. Include steps to reproduce, affected component, and severity if known. We aim to acknowledge within **48 hours** and provide status updates when practical. **Replace with `security@blovault.com` (or a formal VDP page) when domain mail is live** — see [FUTURE.md](FUTURE.md).
 
 ---
 
