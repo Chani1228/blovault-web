@@ -1,38 +1,38 @@
-# BLO VAULT — 향후 구성 (체크리스트)
+# BLO VAULT — Future setup (checklist)
 
-공개 웹(`blovault-web`)·앱·운영을 **도메인·법무·보안** 기준으로 마무리할 때 정리할 항목입니다. (임시 연락처는 현재 개인 Gmail — 아래 “연락처” 참고.)
+Items to close out when hardening **domain, legal, and security** for the public site (`blovault-web`), the app, and day-to-day operations. (Temporary contact is a personal Gmail today — see **Contact / branding** below.)
 
-## 연락처 / 브랜딩
+## Contact / branding
 
-- [ ] **`@blovault.com` 메일** — `privacy@`, `support@`, `security@`(또는 역할 분리) 개설 후 앱·정책·Plaid·스토어 전부 교체
-- [ ] **대표 연락처 단일화** — 스토어, Plaid, 취약점 공시(VDP) 문구와 동일 주소 사용
-- [ ] **공식 VDP** — `security@` 또는 보안 페이지; README 임시 Gmail 문구 교체
-- [ ] (선택) **GitHub Pages 커스텀 도메인** — 예: `legal.blovault.com` → 이 레포 Pages
+- [ ] **`@blovault.com` email** — Create `privacy@`, `support@`, `security@` (or split roles), then replace everywhere: app, policies, Plaid, stores.
+- [ ] **Single canonical support address** — Same address in App Store, Play, Plaid, and vulnerability disclosure copy.
+- [ ] **Formal VDP** — `security@` or a dedicated security page; replace the temporary Gmail paragraph in this repo’s README.
+- [ ] (Optional) **GitHub Pages custom domain** — e.g. `legal.blovault.com` → Pages for this repository.
 
-## 법무 / 정책
+## Legal / policy
 
-- [ ] **변호사 검토** — Privacy Policy · Terms of Service 최종본 (현재 DRAFT 표기 제거)
-- [ ] **데이터 보존·삭제** — 구독 종료 후 서버/로컬 보존 기간이 제품에 맞으면 정책·앱·백엔드 작업과 문구 일치
-- [ ] **CCPA / 주별 규정** — `legal/` 문서와 앱 내 CCPA 화면을 실제 프로세스(요청 접수 메일 등)에 맞게 갱신
-- [ ] **스토어 라벨 정합** — App Store Privacy Nutrition Labels · Google Play Data safety 항목이 `privacy-policy.md` §3·§6과 **실제 수집**과 일치하는지 제출 전 대조
+- [ ] **Attorney review** — Final pass on Privacy Policy and Terms of Service (and any follow-up edits after launch).
+- [ ] **Data retention & deletion** — If you adopt fixed retention (e.g. after subscription ends), align policy copy, app behavior, and backend jobs.
+- [ ] **CCPA / U.S. state laws** — Keep `legal/` docs and the in-app CCPA screen aligned with how you actually intake requests (email workflow, SLAs).
+- [ ] **Store label parity** — Before each release, reconcile **App Store Privacy Nutrition Labels** and **Google Play Data safety** with `privacy-policy.md` §§3–6 and **real** collection/processing.
 
-## 보안 / 기술 (앱 로드맵과 동기화)
+## Security / engineering (sync with app roadmap)
 
-- [ ] **TLS 인증서 퍼블릭 키 핀ning** — 구현 시 Plaid·보안 설문 문구 업데이트
-- [ ] **탈옥·루트 탐지** — 도입 시 정책·스토어 설명 반영
-- [ ] **인증 실패 / Panic Delete** — 설계한 임계치(예: N회 실패)가 있으면 구현과 문서 일치
-- [ ] **Sentry·Supabase** — 프로덕션 프로젝트, RLS, 키 로테이션 운영 절차 문서화
+- [ ] **TLS certificate public-key pinning** — Ship pinning in the client for configured hosts (e.g. Supabase) so runtime behavior matches Privacy Policy §10 and Plaid security answers.
+- [ ] **Jailbreak / root detection** — If added, update policy and store listings.
+- [ ] **Auth failures / Panic Delete** — If you define thresholds (e.g. N failed attempts), match implementation and docs.
+- [ ] **Sentry & Supabase** — Document production projects, RLS, and key-rotation runbooks.
 
-## Plaid / 파트너
+## Plaid / partners
 
-- [ ] **프로덕션 제출 패키지 PDF** — 위 항목 반영 후 URL·이메일·스크린샷 재점검
-- [ ] **Data retention 첨부** — 내부 정책 확정 후 최종본 업로드
+- [ ] **Production application PDF** — Re-check URLs, emails, and screenshots after the items above.
+- [ ] **Data retention attachment** — Upload the final internal policy once it is fixed.
 
-## 이 저장소(`blovault-web`)
+## This repository (`blovault-web`)
 
-- [ ] **GitHub Pages** 켜기(미설정 시) — `index.html` 랜딩 노출
-- [ ] **README “Current product configuration”** — 메인 앱 레포와 주기적 동기화
+- [ ] **Enable GitHub Pages** (if not already) — Surface `index.html`.
+- [ ] **README “Current product configuration”** — Periodically sync with the main **blo-vault** app repo.
 
 ---
 
-*마지막 정리: 2026-04-04*
+*Last updated: 2026-04-04*
