@@ -13,6 +13,7 @@
 - [ ] **변호사 검토** — Privacy Policy · Terms of Service 최종본 (현재 DRAFT 표기 제거)
 - [ ] **데이터 보존·삭제** — 구독 종료 후 서버/로컬 보존 기간이 제품에 맞으면 정책·앱·백엔드 작업과 문구 일치
 - [ ] **CCPA / 주별 규정** — `legal/` 문서와 앱 내 CCPA 화면을 실제 프로세스(요청 접수 메일 등)에 맞게 갱신
+- [ ] **스토어 라벨 정합** — App Store Privacy Nutrition Labels · Google Play Data safety 항목이 `privacy-policy.md` §3·§6과 **실제 수집**과 일치하는지 제출 전 대조
 
 ## 보안 / 기술 (앱 로드맵과 동기화)
 
