@@ -40,7 +40,3 @@ These Terms are governed by the laws of the **State of Delaware**, excluding con
 ## 8. Contact (temporary — no @blovault.com yet)
 
 **chan.hong1228@gmail.com**
-
----
-
-**DRAFT — Attorney review recommended before production launch.**

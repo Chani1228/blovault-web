@@ -25,8 +25,9 @@ Mirrors the shipping **blo-vault** app repo at a high level (not legal advice).
 | **Monetization** | **RevenueCat**; free tier **3** linked Plaid accounts |
 | **User wipe** | **Panic Delete** (Settings): clears local DB, secure storage, and local cache boxes |
 | **Crash reporting** | **Sentry** (configurable via env); PII scrubbing in client |
+| **Data in transit** | **HTTPS (TLS)**; **certificate public-key pinning** for critical endpoints (Supabase and client-configured domains), per [Privacy Policy §10](privacy-policy.md) and Plaid security questionnaire |
 
-**Not claimed here as shipped:** certificate public-key pinning, jailbreak/root gating, automated subscription-based server purge schedules — see main app roadmap in the private **blo-vault** repo.
+**Not claimed here as shipped:** jailbreak/root gating, automated subscription-based server purge schedules — see main app roadmap in the private **blo-vault** repo.
 
 ---
 

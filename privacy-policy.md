@@ -4,8 +4,6 @@
 
 BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong). We designed the App so that sensitive financial details stay on your device whenever possible.
 
-This policy is a draft and does not replace legal advice. We recommend independent review before relying on it for regulatory filings.
-
 **In-app:** Settings → Data & Privacy → Privacy Policy.  
 **Public copy (partners, e.g. Plaid):** https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md
 
@@ -82,7 +80,7 @@ We **do not** state an automated “subscription end + fixed-day” server purge
 
 ## 10. Data security
 
-We use industry-appropriate measures, including: **AES-256** encryption at rest on device; OS secure storage (e.g., iOS Keychain / Android Keystore) for key material; **TLS** for data in transit between the App and our services. We **do not** claim certificate public-key **pinning** unless and until it is implemented in the shipping client.
+We use industry-appropriate measures, including: **AES-256** encryption at rest on device; OS secure storage (e.g., iOS Keychain / Android Keystore) for key material; **HTTPS (TLS)** for data in transit. For **critical API endpoints**—including connections from the App to our backend (**Supabase**) and other domains we configure in the shipping client—we apply **certificate public-key pinning** where supported by the platform, consistent with our security disclosures to partners (e.g. Plaid). This reduces exposure to man-in-the-middle attacks on those connections.
 
 ## 11. Your rights (CCPA, U.S. state laws, and others)
 
@@ -119,7 +117,3 @@ We may update this policy. We will post the new version in the App and on our pu
 **chan.hong1228@gmail.com**
 
 For privacy requests, include enough detail for us to verify and process your request. We will respond within timeframes required by applicable law.
-
----
-
-**DRAFT — Attorney review recommended before production launch and regulatory reliance.**
