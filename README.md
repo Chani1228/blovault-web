@@ -4,8 +4,18 @@ Public static site for **BLO VAULT** — legal pages and partner disclosure link
 
 **Repository:** [github.com/Chani1228/blovault-web](https://github.com/Chani1228/blovault-web)
 
-Optional: enable **GitHub Pages** (Settings → Pages → Deploy from `main`) to serve [`index.html`](index.html) at  
-`https://chani1228.github.io/blovault-web/` — legal URLs below work either way.
+Enable **GitHub Pages** (Settings → Pages → **Deploy from branch `main` / folder `/ (root)`**) to serve this site at  
+`https://chani1228.github.io/blovault-web/`. Until Pages is on, only GitHub **blob** links work for human-readable Markdown.
+
+### Which URL should I give Plaid / app stores?
+
+| Kind | Example | What reviewers see |
+|------|---------|---------------------|
+| **GitHub blob** | `https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md` | GitHub’s page with **rendered** Markdown (no raw source). **Works without GitHub Pages.** |
+| **raw.githubusercontent.com** | `…/main/privacy-policy.md` | **Plain text source** — harder to read; not recommended as the primary link. |
+| **GitHub Pages viewer** | `https://chani1228.github.io/blovault-web/privacy-policy.html` (alias for `view.html?f=privacy-policy.md`) | **Clean reading page** (Markdown → HTML). **Requires Pages enabled.** |
+
+**Recommendation:** Use **blob** if you have not enabled Pages yet. After Pages is live, you may switch forms to the **`.html` / `view.html`** URLs for a simpler reading experience — content stays in the `.md` files only.
 
 ---
 
@@ -56,6 +66,6 @@ Security researchers may report issues to **chan.hong1228@gmail.com**. Include s
 
 | Field | Value |
 |--------|--------|
-| Privacy Policy URL | `https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md` |
-| Terms of Service URL | `https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md` |
+| Privacy Policy URL | `https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md` — or after Pages: `https://chani1228.github.io/blovault-web/privacy-policy.html` |
+| Terms of Service URL | `https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md` — or after Pages: `https://chani1228.github.io/blovault-web/terms-of-service.html` |
 | Support / privacy / security (temporary) | `chan.hong1228@gmail.com` — single inbox until `@blovault.com` addresses exist |

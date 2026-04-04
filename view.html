@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BLO VAULT — Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Syne:wght@700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg: #080b0f;
+      --text: #e8eaed;
+      --muted: #9aa0a6;
+      --primary: #00c8d4;
+      --card: #12161c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Sans", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      padding: 24px 20px 64px;
+    }
+    .bar {
+      max-width: 720px;
+      margin: 0 auto 24px;
+      font-size: 13px;
+    }
+    .bar a { color: var(--primary); }
+    #content {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    #content h1, #content h2, #content h3 {
+      font-family: Syne, system-ui, sans-serif;
+      color: #fff;
+      margin-top: 1.4em;
+    }
+    #content h1 { font-size: 1.65rem; margin-top: 0; }
+    #content a { color: var(--primary); }
+    #content code, #content pre {
+      background: var(--card);
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+    #content pre { padding: 12px 14px; overflow-x: auto; }
+    #content table { border-collapse: collapse; width: 100%; font-size: 14px; }
+    #content th, #content td { border: 1px solid #2a3038; padding: 8px 10px; text-align: left; }
+    #content th { background: var(--card); }
+    .err { color: #f87171; max-width: 720px; margin: 2rem auto; }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a href="index.html">← Legal home</a>
+    · <a id="src" href="#">Source (.md) on GitHub</a>
+  </div>
+  <div id="content">Loading…</div>
+  <script>
+    (function () {
+      var allowed = {
+        "privacy-policy.md": "Privacy Policy",
+        "terms-of-service.md": "Terms of Service",
+        "README.md": "README",
+        "FUTURE.md": "FUTURE"
+      };
+      var q = new URLSearchParams(window.location.search).get("f") || "privacy-policy.md";
+      if (!allowed[q]) q = "privacy-policy.md";
+      document.title = "BLO VAULT — " + allowed[q];
+      document.getElementById("src").href =
+        "https://github.com/Chani1228/blovault-web/blob/main/" + encodeURIComponent(q);
+      fetch(q)
+        .then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.text();
+        })
+        .then(function (text) {
+          document.getElementById("content").innerHTML = marked.parse(text);
+        })
+        .catch(function () {
+          document.getElementById("content").innerHTML = "";
+          var p = document.createElement("p");
+          p.className = "err";
+          p.innerHTML =
+            "Could not load <strong>" +
+            q +
+            "</strong> here. This page only works when served via <strong>GitHub Pages</strong> from this repo (same-origin fetch). " +
+            'Open the file on GitHub: <a style="color:#00c8d4" href="https://github.com/Chani1228/blovault-web/blob/main/' +
+            encodeURIComponent(q) +
+            '">blob view</a> (renders Markdown in the browser).';
+          document.body.appendChild(p);
+        });
+    })();
+  </script>
+</body>
+</html>

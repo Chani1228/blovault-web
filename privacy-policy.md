@@ -5,7 +5,8 @@
 BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong). We designed the App so that sensitive financial details stay on your device whenever possible.
 
 **In-app:** Settings → Data & Privacy → Privacy Policy.  
-**Public copy (partners, e.g. Plaid):** https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md
+**Public copy (GitHub — always works):** https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md  
+**Easy read (GitHub Pages — enable Pages first):** https://chani1228.github.io/blovault-web/privacy-policy.html → renders the same Markdown in a simple layout.
 
 ---
 

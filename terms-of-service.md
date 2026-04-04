@@ -3,7 +3,8 @@
 **Last Updated:** April 4, 2026
 
 **In-app:** Settings → Data & Privacy → Terms of Service.  
-**Public copy:** https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md
+**Public copy (GitHub):** https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md  
+**Easy read (GitHub Pages — enable Pages first):** https://chani1228.github.io/blovault-web/terms-of-service.html
 
 ---
 

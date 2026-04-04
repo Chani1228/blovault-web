@@ -30,7 +30,7 @@ Items to close out when hardening **domain, legal, and security** for the public
 
 ## This repository (`blovault-web`)
 
-- [ ] **Enable GitHub Pages** (if not already) — Surface `index.html`.
+- [ ] **Enable GitHub Pages** (if not already) — Branch `main`, folder `/ (root)`. Surfaces `index.html` and [`privacy-policy.html`](privacy-policy.html) / [`view.html`](view.html) (Markdown rendered for easy reading).
 - [ ] **README “Current product configuration”** — Periodically sync with the main **blo-vault** app repo.
 
 ---
