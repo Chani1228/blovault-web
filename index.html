@@ -1,158 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BLO VAULT — Legal &amp; disclosures</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Syne:wght@700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #080b0f;
-      --text: #e8eaed;
-      --muted: #9aa0a6;
-      --primary: #00c8d4;
-      --card: #12161c;
-      --border: #2a3038;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "DM Sans", system-ui, sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      padding: 48px 24px 64px;
-    }
-    .wrap { max-width: 560px; margin: 0 auto; }
-    h1 {
-      font-family: Syne, system-ui, sans-serif;
-      font-weight: 700;
-      font-size: clamp(1.75rem, 4vw, 2rem);
-      letter-spacing: 0.02em;
-      margin: 0 0 8px;
-    }
-    .tagline { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
-    .logo {
-      color: var(--primary);
-      font-family: Syne, system-ui, sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.35em;
-      margin-bottom: 24px;
-    }
-    ul { list-style: none; padding: 0; margin: 0; }
-    li {
-      margin-bottom: 12px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    a.doc {
-      display: block;
-      padding: 16px 18px;
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 600;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    a.doc:hover {
-      background: #1a1f28;
-      border-color: var(--primary);
-    }
-    a.doc span.sub {
-      display: block;
-      font-weight: 400;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-    footer {
-      margin-top: 40px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      font-size: 12px;
-      color: var(--muted);
-    }
-    a.inline { color: var(--primary); }
-    .note {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 20px;
-      padding: 12px 14px;
-      background: var(--card);
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BLO VAULT - Privacy-first on-device AI financial advisor. Coming soon.">
+    <title>BLO VAULT — Coming Soon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #080B0F 0%, #0F1419 50%, #0A0D12 100%);
+            color: #E8EAED;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 200, 212, 0.15);
+            border: 1px solid #00C8D4;
+            color: #00C8D4;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+        }
+
+        .logo {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, #00C8D4 0%, #00E0EA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: #FFFFFF;
+        }
+
+        .tagline {
+            font-size: 20px;
+            color: #00C8D4;
+            margin-bottom: 32px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #B8BABC;
+            max-width: 620px;
+            margin: 0 auto 48px;
+            line-height: 1.8;
+        }
+
+        .cta-section {
+            margin-bottom: 60px;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 20px;
+            border: 1px solid rgba(0, 200, 212, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #E8EAED;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .email-input::placeholder {
+            color: #666;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: #00C8D4;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 12px rgba(0, 200, 212, 0.2);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #00C8D4;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #00D4E0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 200, 212, 0.3);
+        }
+
+        .launch-hint {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 32px;
+            margin: 80px 0;
+            padding: 60px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .feature {
+            padding: 24px;
+            border-radius: 12px;
+            background: rgba(0, 200, 212, 0.03);
+            border: 1px solid rgba(0, 200, 212, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: rgba(0, 200, 212, 0.08);
+            border-color: rgba(0, 200, 212, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .feature h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #FFF;
+            font-weight: 600;
+        }
+
+        .feature p {
+            font-size: 13px;
+            color: #999;
+            line-height: 1.6;
+        }
+
+        footer {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .legal-links {
+            margin: 24px 0;
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .legal-links a {
+            color: #00C8D4;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .legal-links a:hover {
+            color: #00D4E0;
+            text-decoration: underline;
+        }
+
+        .contact {
+            margin-top: 20px;
+        }
+
+        .contact a {
+            color: #00C8D4;
+            text-decoration: none;
+        }
+
+        .contact a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 32px 20px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .logo {
+                font-size: 42px;
+            }
+
+            .tagline {
+                font-size: 18px;
+            }
+
+            .description {
+                font-size: 15px;
+            }
+
+            .email-form {
+                flex-direction: column;
+            }
+
+            .email-input {
+                width: 100%;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+                padding: 40px 0;
+            }
+
+            .feature {
+                padding: 16px;
+            }
+
+            .feature-icon {
+                font-size: 32px;
+            }
+
+            .legal-links {
+                gap: 12px;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .tagline {
+                font-size: 16px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .feature h3 {
+                font-size: 14px;
+            }
+
+            .feature p {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="logo">BLO VAULT</div>
-    <h1>Legal &amp; disclosures</h1>
-    <p class="tagline">Public copies of in-app policies. Same text as Settings → Data &amp; Privacy in the BLO VAULT app.</p>
-    <p class="note">
-      <strong>On GitHub Pages:</strong> use the first links below for a clean reader (no GitHub file UI).
-      If you opened this file locally or Pages is off, use the GitHub links — they still show formatted Markdown.
-    </p>
-    <ul>
-      <li>
-        <a class="doc" href="privacy-policy.html">
-          Privacy Policy
-          <span class="sub">Read here (Pages) — same as <code>privacy-policy.md</code></span>
-        </a>
-      </li>
-      <li>
-        <a class="doc" href="terms-of-service.html">
-          Terms of Service
-          <span class="sub">Read here (Pages) — same as <code>terms-of-service.md</code></span>
-        </a>
-      </li>
-      <li>
-        <a class="doc" href="https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md">
-          Privacy Policy (GitHub)
-          <span class="sub">Always works for Plaid / partners — rendered Markdown on github.com</span>
-        </a>
-      </li>
-      <li>
-        <a class="doc" href="https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md">
-          Terms of Service (GitHub)
-          <span class="sub">Rendered Markdown on github.com</span>
-        </a>
-      </li>
-      <li>
-        <a class="doc" href="https://github.com/Chani1228/blovault-web/blob/main/README.md">
-          Product &amp; configuration notes
-          <span class="sub">Technical summary for reviewers (README)</span>
-        </a>
-      </li>
-      <li>
-        <a class="doc" href="https://github.com/Chani1228/blovault-web/blob/main/FUTURE.md">
-          Planned setup (roadmap)
-          <span class="sub">Domain email, legal finalization, security items</span>
-        </a>
-      </li>
-      <li>
-        <a class="doc" href="view.html?f=information-security-policy.md">
-          Information Security Policy
-          <span class="sub">Plaid / partner security questionnaire attachment (Pages)</span>
-        </a>
-      </li>
-      <li>
-        <a class="doc" href="https://github.com/Chani1228/blovault-web/blob/main/information-security-policy.md">
-          Information Security Policy (GitHub)
-          <span class="sub">Same document — rendered Markdown</span>
-        </a>
-      </li>
-    </ul>
-    <footer>
-      Contact (temporary): <a class="inline" href="mailto:chan.hong1228@gmail.com">chan.hong1228@gmail.com</a>
-      · Source: <a class="inline" href="https://github.com/Chani1228/blovault-web">github.com/Chani1228/blovault-web</a>
-    </footer>
-  </div>
+    <div class="container">
+        <!-- Badge -->
+        <div class="badge">In Progress</div>
+
+        <!-- Hero Section -->
+        <div class="logo">BLO VAULT</div>
+        <h1>Your Data, Your Device, Your Privacy</h1>
+        <p class="tagline">Privacy-first on-device AI financial advisor</p>
+
+        <p class="description">
+            Connect your bank accounts and get personalized financial insights powered by on-device AI.
+            Your financial data never leaves your phone. Encrypted, private, and always under your control.
+        </p>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <div class="email-form">
+                <input
+                    type="email"
+                    class="email-input"
+                    placeholder="Enter your email"
+                    id="emailInput"
+                    aria-label="Email address"
+                >
+                <button class="btn btn-primary" onclick="handleEmailSubmit()">Notify Me</button>
+            </div>
+            <p class="launch-hint">Available soon on App Store</p>
+        </div>
+
+        <!-- Features -->
+        <section class="features">
+            <div class="feature">
+                <span class="feature-icon">&#x1F512;</span>
+                <h3>100% Private</h3>
+                <p>All data stays on your device. AES-256 encryption. Zero cloud uploads.</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">&#x1F9E0;</span>
+                <h3>AI-Powered</h3>
+                <p>On-device AI that understands your financial situation and answers your questions.</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">&#x1F3E6;</span>
+                <h3>Multi-Account</h3>
+                <p>Connect checking, savings, credit cards, investments, and loans seamlessly.</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">&#x1F4CA;</span>
+                <h3>Smart Insights</h3>
+                <p>Real-time spending analysis, budgeting, and wealth tracking at a glance.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="legal-links">
+                <a href="/privacy.txt">Privacy Policy</a>
+                <a href="/terms.txt">Terms of Service</a>
+                <a href="/ccpa.txt">CCPA Opt-Out</a>
+            </div>
+            <div class="contact">
+                Questions? <a href="mailto:info@blovault.com">Contact us</a>
+            </div>
+            <div class="copyright">
+                &copy; 2026 BLO VAULT. All rights reserved.
+                <br>Patent pending for on-device financial AI technology.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function handleEmailSubmit() {
+            var email = document.getElementById('emailInput').value;
+            if (email && email.indexOf('@') !== -1) {
+                alert('Thank you! We\'ll notify you when BLO VAULT launches.');
+                document.getElementById('emailInput').value = '';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        }
+
+        document.getElementById('emailInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                handleEmailSubmit();
+            }
+        });
+    </script>
 </body>
 </html>
