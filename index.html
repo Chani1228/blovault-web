@@ -12,7 +12,8 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html {
+            scroll-behavior: auto;
             height: 100%;
             width: 100%;
         }
@@ -26,6 +27,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0;
+            padding: 0;
+            width: 100%;
         }
 
         .container {
@@ -33,6 +37,7 @@
             margin: 0 auto;
             padding: 40px 24px;
             text-align: center;
+            width: 100%;
         }
 
         .badge {
@@ -388,6 +393,10 @@
     </div>
 
     <script>
+        window.addEventListener('load', function() {
+            window.scrollTo(0, 0);
+        });
+
         function handleEmailSubmit() {
             var email = document.getElementById('emailInput').value;
             if (email && email.indexOf('@') !== -1) {
