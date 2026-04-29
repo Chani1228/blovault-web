@@ -1,7 +1,7 @@
 BLO VAULT PRIVACY POLICY
 Last Updated: April 4, 2026
 
-BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong).
+BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an independent developer.
 
 AT A GLANCE
 - Plaid: You connect banks through Plaid. Transaction and balance data are stored primarily on your device in an encrypted database.
