@@ -90,7 +90,7 @@ The program includes:
 ## 9. Vulnerability and patch management
 
 - **Dependency and supply chain:** Monitor advisories; upgrade packages per severity-based targets (e.g., **Critical ~24h**, **High ~72h**, **Medium ~7 days**) where feasible for a small team.
-- **Disclosure intake:** Security issues may be reported to **chan.hong1228@gmail.com** (temporary); acknowledgment targeted within **48 hours**; status updates within **7 days** when practical; remediation timelines aligned with severity.
+- **Disclosure intake:** Security issues may be reported to **info@blovault.com** (temporary); acknowledgment targeted within **48 hours**; status updates within **7 days** when practical; remediation timelines aligned with severity.
 - **Formal security@ address** and published VDP page are planned when `@blovault.com` mail is available (see repository **FUTURE.md**).
 
 ---
@@ -154,7 +154,7 @@ Aligned with the **Data Retention and Disposal** practices supplied with the Pla
 
 ## 15. Contact
 
-**Information security / privacy (temporary):** chan.hong1228@gmail.com  
+**Information security / privacy (temporary):** info@blovault.com  
 
 ---
 

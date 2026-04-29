@@ -58,7 +58,7 @@ In the mobile app, the same substance is under **Settings → Data & Privacy →
 
 ## Vulnerability disclosure (temporary)
 
-Security researchers may report issues to **chan.hong1228@gmail.com**. Include steps to reproduce, affected component, and severity if known. We aim to acknowledge within **48 hours** and provide status updates when practical. **Replace with `security@blovault.com` (or a formal VDP page) when domain mail is live** — see [FUTURE.md](FUTURE.md).
+Security researchers may report issues to **info@blovault.com**. Include steps to reproduce, affected component, and severity if known. We aim to acknowledge within **48 hours** and provide status updates when practical. **Replace with `security@blovault.com` (or a formal VDP page) when domain mail is live** — see [FUTURE.md](FUTURE.md).
 
 ---
 
@@ -68,7 +68,7 @@ Security researchers may report issues to **chan.hong1228@gmail.com**. Include s
 |--------|--------|
 | Privacy Policy URL | `https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md` — or after Pages: `https://chani1228.github.io/blovault-web/privacy-policy.html` |
 | Terms of Service URL | `https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md` — or after Pages: `https://chani1228.github.io/blovault-web/terms-of-service.html` |
-| Support / privacy / security (temporary) | `chan.hong1228@gmail.com` — single inbox until `@blovault.com` addresses exist |
+| Support / privacy / security (temporary) | `info@blovault.com` — single inbox until `@blovault.com` addresses exist |
 
 ### Plaid — Information Security Policy (attachment)
 
