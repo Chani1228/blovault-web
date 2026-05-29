@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BLO VAULT — Bank sign-in</title>
+  <style>
+    body { font-family: system-ui, sans-serif; text-align: center; margin: 3rem; color: #e8eef4; background: #080b0f; }
+    p { max-width: 24rem; margin: 1rem auto; line-height: 1.55; }
+    small { opacity: 0.75; font-size: 0.88rem; }
+    a { color: #5eead4; }
+  </style>
+  <script>
+    (function () {
+      // Plaid appends OAuth params (e.g. oauth_state_id). A bare URL (manual open)
+      // must not call replace(blovault://…) or many browsers show a blank page.
+      var q = window.location.search || '';
+      if (q.length > 1) {
+        window.location.replace('blovault://plaid-oauth' + q);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <p>Returning to <strong>BLO VAULT</strong>…</p>
+  <p><small>If the app does not open, switch back to BLO VAULT from the app switcher or home screen.</small></p>
+  <noscript>
+    <p><small>Enable JavaScript for automatic return to the app after bank sign-in.</small></p>
+  </noscript>
+  <p id="manual" hidden>
+    <small>This page is opened <strong>automatically</strong> after you sign in at your bank during Plaid Link.
+    If you opened this link by itself, go back to <strong>BLO VAULT</strong> and tap <strong>Connect Bank</strong> again.
+    A <strong>404 on blovault.com</strong> means the OAuth bridge is not deployed — use
+    <code>https://chani1228.github.io/blovault-web/oauth-redirect</code> in Plaid Dashboard.</small>
+  </p>
+  <script>
+    if (!(window.location.search && window.location.search.length > 1)) {
+      document.getElementById('manual').hidden = false;
+    }
+  </script>
+</body>
+</html>
