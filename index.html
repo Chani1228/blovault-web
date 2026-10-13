@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="BLO VAULT - Privacy-first on-device AI financial advisor. Coming soon.">
+    <meta name="description" content="BLO VAULT - Privacy-first personal finance app. Coming soon.">
     <title>BLO VAULT — Coming Soon</title>
     <style>
         * {
@@ -93,37 +93,9 @@
             margin-bottom: 60px;
         }
 
-        .email-form {
-            display: flex;
-            gap: 12px;
-            max-width: 500px;
-            margin: 0 auto 32px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
 
-        .email-input {
-            flex: 1;
-            min-width: 200px;
-            padding: 14px 20px;
-            border: 1px solid rgba(0, 200, 212, 0.3);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #E8EAED;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
 
-        .email-input::placeholder {
-            color: #666;
-        }
 
-        .email-input:focus {
-            outline: none;
-            border-color: #00C8D4;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 12px rgba(0, 200, 212, 0.2);
-        }
 
         .btn {
             padding: 14px 28px;
@@ -266,14 +238,6 @@
                 font-size: 15px;
             }
 
-            .email-form {
-                flex-direction: column;
-            }
-
-            .email-input {
-                width: 100%;
-            }
-
             .features {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 16px;
@@ -329,25 +293,15 @@
         <!-- Hero Section -->
         <div class="logo">BLO VAULT</div>
         <h1>Your Data, Your Device, Your Privacy</h1>
-        <p class="tagline">Privacy-first on-device AI financial advisor</p>
+        <p class="tagline">Privacy-first personal finance, on your phone</p>
 
         <p class="description">
-            Connect your bank accounts and get personalized financial insights powered by on-device AI.
-            Your financial data never leaves your phone. Encrypted, private, and always under your control.
+            Connect your bank accounts and see your cash flow, spending, and net worth in one place.
+            Your financial data is stored encrypted on your phone, not on our servers. Private and always under your control.
         </p>
 
         <!-- CTA Section -->
         <div class="cta-section">
-            <div class="email-form">
-                <input
-                    type="email"
-                    class="email-input"
-                    placeholder="Enter your email"
-                    id="emailInput"
-                    aria-label="Email address"
-                >
-                <button class="btn btn-primary" onclick="handleEmailSubmit()">Notify Me</button>
-            </div>
             <p class="launch-hint">Available soon on App Store</p>
         </div>
 
@@ -356,12 +310,12 @@
             <div class="feature">
                 <span class="feature-icon">&#x1F512;</span>
                 <h3>100% Private</h3>
-                <p>All data stays on your device. AES-256 encryption. Zero cloud uploads.</p>
+                <p>Your ledger stays on your device with AES-256 encryption. It is never stored on our servers.</p>
             </div>
             <div class="feature">
-                <span class="feature-icon">&#x1F9E0;</span>
-                <h3>AI-Powered</h3>
-                <p>On-device AI that understands your financial situation and answers your questions.</p>
+                <span class="feature-icon">&#x1F4C5;</span>
+                <h3>Cash Flow Ahead</h3>
+                <p>See upcoming bills, card payments, and paychecks before they hit your account.</p>
             </div>
             <div class="feature">
                 <span class="feature-icon">&#x1F3E6;</span>
@@ -387,7 +341,7 @@
             </div>
             <div class="copyright">
                 &copy; 2026 BLO VAULT. All rights reserved.
-                <br>Patent pending for on-device financial AI technology.
+                <br>Patent pending.
             </div>
         </footer>
     </div>
@@ -395,22 +349,6 @@
     <script>
         window.addEventListener('load', function() {
             window.scrollTo(0, 0);
-        });
-
-        function handleEmailSubmit() {
-            var email = document.getElementById('emailInput').value;
-            if (email && email.indexOf('@') !== -1) {
-                alert('Thank you! We\'ll notify you when BLO VAULT launches.');
-                document.getElementById('emailInput').value = '';
-            } else {
-                alert('Please enter a valid email address.');
-            }
-        }
-
-        document.getElementById('emailInput').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                handleEmailSubmit();
-            }
         });
     </script>
 </body>
