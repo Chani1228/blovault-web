@@ -1,6 +1,6 @@
 # BLO VAULT Privacy Policy
 
-**Last Updated:** October 12, 2026
+**Last Updated:** October 14, 2026
 
 BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong). We designed the App so that sensitive financial details stay on your device whenever possible.
 
@@ -84,7 +84,7 @@ Where the GDPR, UK GDPR, or similar laws apply, we rely on contract performance,
 ## 9. Data retention and deletion
 
 - On-device data remains until you delete it (Panic Delete or uninstall).
-- Bank connections: when your free trial (30 days from account creation), subscription, or beta access ends, we remove your connections at Plaid, which ends our access to those accounts. Uninstalling the App does not by itself disconnect your banks; if you reinstall on the same device, the App removes the old connections. To disconnect right away, remove your accounts in the App before uninstalling.
+- Bank connections: when your free trial (30 days from account creation), subscription, or beta access ends, we remove your connections at Plaid, which ends our access to those accounts. Uninstalling the App does not by itself disconnect your banks; if you reinstall on the same device, the App removes the old connections. To disconnect right away, remove your accounts in the App before uninstalling. For complimentary (permanent) beta access, we also remove your connections after 90 days without you opening the App; the beta access itself continues and you can link your accounts again.
 - Encrypted tokens and related opaque link metadata on Supabase remain until you remove linked items, revoke access through Plaid or the App where available, or we delete them in connection with support or closure processes. We do not retain readable account names or balances on our servers.
 - Feedback records and attachments on Supabase are deleted when you use "Delete account & data" in the App. Otherwise they are retained for as long as needed to operate support and improve the App unless we delete them earlier or you ask us to delete them where applicable law requires.
 - Sentry data is retained per Sentry project settings.
