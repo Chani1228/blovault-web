@@ -64,6 +64,8 @@ p{margin:0}
 .i{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .num{font-variant-numeric:tabular-nums}
 .mono{font-family:var(--mono);font-size:12.5px}
+.unote{display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.usub{display:block;font-size:11px;color:var(--fg3)}
 
 /* brand */
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
@@ -402,11 +404,13 @@ td.note{font-size:13px}
   const flagsOf=()=>Array.isArray(snap.webhook_flags)?snap.webhook_flags:(snap.webhook_flags?.items||[]);
   const isOpen=x=>!['implemented','rejected'].includes(x.status);
 
+  const noteOf=sh=>{const u=(snap.users?.items||[]).find(x=>x.short===sh);return u&&u.invite_note?String(u.invite_note):''};
+  const who=sh=>{const n=noteOf(sh);if(!n) return sh;return (n.length>24?n.slice(0,23)+'…':n)+' ('+sh+')'};
   function attentionRows(){
     const rows=[];
-    (snap.plaid?.items||[]).forEach(i=>{ if(i.is_active&&i.item_status&&i.item_status!=='login_repaired') rows.push(['warn',`${inst(i.institution_id)} connection: ${i.item_status.replace(/_/g,' ')}`,`Item ${i.item_id_short} · user ${i.user_short} · ${ago(i.item_status_at)}`,'sync']);});
+    (snap.plaid?.items||[]).forEach(i=>{ if(i.is_active&&i.item_status&&i.item_status!=='login_repaired') rows.push(['warn',`${inst(i.institution_id)} connection: ${i.item_status.replace(/_/g,' ')}`,`Item ${i.item_id_short} · user ${who(i.user_short)} · ${ago(i.item_status_at)}`,'sync']);});
     (snap.reaper?.recent_rows||[]).filter(x=>x.decision==='error'||x.error).slice(0,5).forEach(x=>rows.push(['bad','Cleanup job problem: '+(human(x.decision)||''),`${fmtDT(x.run_at)} · user ${x.user_short||'—'} · ${x.error||x.reason||''}`,'cleanup']));
-    (snap.users?.items||[]).forEach(x=>{ if(x.plan==='trial'&&x.trial_days_remaining!=null&&x.trial_days_remaining<=3) rows.push(['warn',`Trial ends in ${x.trial_days_remaining} day(s)`,`User ${x.short} · ${x.items_active??x.institution_count??0} bank link(s)`,'users']);});
+    (snap.users?.items||[]).forEach(x=>{ if(x.plan==='trial'&&x.trial_days_remaining!=null&&x.trial_days_remaining<=3) rows.push(['warn',`Trial ends in ${x.trial_days_remaining} day(s)`,`User ${who(x.short)} · ${x.items_active??x.institution_count??0} bank link(s)`,'users']);});
     const fresh=(snap.feedback?.items||[]).filter(x=>x.status==='pending');
     if(fresh.length) rows.push(['info',`${fresh.length} new bug report(s)`,'Open the Bug reports tab','bugs']);
     const stale=flagsOf().filter(w=>w.last_webhook_at&&(Date.now()-dOf(w.last_webhook_at))/36e5>48);
@@ -447,7 +451,7 @@ td.note{font-size:13px}
       <div class="box wide"><h3>Sign-ups per week</h3><div class="chart">${stackedBars(weeks,[['n','New accounts','var(--accent)']])}</div></div>
     </div>
     ${u.trial_ends_note?`<p class="note">${esc(u.trial_ends_note)}</p>`:''}
-    ${table(['User','Plan','Access','>Banks','Trial ends','Last opened','Joined'],(u.items||[]).map(x=>`<tr><td class="mono">${esc(x.short)}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${x.items_active??x.institution_count??'—'}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td></tr>`),'No users in this snapshot.')}`;
+    ${table(['User','Plan','Access','>Banks','Trial ends','Last opened','Joined'],(u.items||[]).map(x=>`<tr><td>${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${x.items_active??x.institution_count??'—'}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td></tr>`),'No users in this snapshot.')}`;
   };
   P.plaid=()=>{
     const p=snap.plaid||{}, bp=p.by_product||{}, cp=p.cost_by_product||{};
@@ -456,9 +460,9 @@ td.note{font-size:13px}
     <p class="note">${esc(p.cost_basis_note||'')}</p>
     <div class="grid2">
       <div class="box"><h3>Links by institution</h3>${hbars(insts)}</div>
-      <div class="box"><h3>Est. cost by user</h3>${hbars((p.per_user||[]).map(x=>({label:x.user_short,v:n0(x.est_cost)})),{fmt:v=>'$'+v.toFixed(2),color:'var(--violet)'})}</div>
+      <div class="box"><h3>Est. cost by user</h3>${hbars((p.per_user||[]).map(x=>({label:who(x.user_short),v:n0(x.est_cost)})),{fmt:v=>'$'+v.toFixed(2),color:'var(--violet)'})}</div>
     </div>
-    ${table(['Item','User','Institution','Product (est.)','State','Last webhook','>Age (days)'],(p.items||[]).map(i=>`<tr><td class="mono">${esc(i.item_id_short)}</td><td class="mono">${esc(i.user_short)}</td><td>${esc(inst(i.institution_id))}</td><td>${esc(i.product_assumed||'—')}</td><td>${itemState(i)}</td><td>${esc(ago(i.last_webhook_at))}</td><td class="r num">${i.age_days??'—'}</td></tr>`),'No bank connections in this snapshot.')}`;
+    ${table(['Item','User','Institution','Product (est.)','State','Last webhook','>Age (days)'],(p.items||[]).map(i=>`<tr><td class="mono">${esc(i.item_id_short)}</td><td class="mono">${esc(who(i.user_short))}</td><td>${esc(inst(i.institution_id))}</td><td>${esc(i.product_assumed||'—')}</td><td>${itemState(i)}</td><td>${esc(ago(i.last_webhook_at))}</td><td class="r num">${i.age_days??'—'}</td></tr>`),'No bank connections in this snapshot.')}`;
   };
   P.sync=()=>{
     const p=snap.plaid||{}, flags=flagsOf();
