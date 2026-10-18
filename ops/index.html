@@ -254,6 +254,45 @@ td.note{font-size:13px}
 .field input{font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line2);border-radius:var(--r-md);background:var(--bg);color:var(--fg);min-height:48px;width:100%}
 .field input:hover{border-color:var(--fg3)}
 .field input:focus-visible{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.field select{font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line2);border-radius:var(--r-md);background:var(--bg);color:var(--fg);min-height:48px;width:100%}
+.field select:focus-visible{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.field .hint{font-size:12.5px;color:var(--fg3)}
+.field input[readonly]{font-family:var(--mono);font-size:15px}
+.check{display:flex;gap:10px;align-items:flex-start;min-height:44px;font-size:14px;color:var(--fg);cursor:pointer}
+.check input{width:22px;height:22px;flex:none;margin:0}
+
+/* admin actions: modal, menu, toast, shortcuts */
+body.mopen{overflow:hidden}
+.mback{position:fixed;inset:0;z-index:60;background:rgba(14,20,34,.55);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px))}
+.mdlg{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:20px;box-shadow:var(--sh3);width:100%;max-width:480px;max-height:100%;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:var(--s4)}
+.mdlg.wide{max-width:960px}
+.mdlg:focus{outline:none}
+.mdlg h2{font-family:var(--display);font-size:20px;font-weight:700;letter-spacing:-.01em}
+.mbody{display:flex;flex-direction:column;gap:var(--s3);font-size:14.5px;color:var(--fg2);min-width:0;overflow-wrap:anywhere}
+.mfoot{display:flex;gap:var(--s2);justify-content:flex-end;flex-wrap:wrap}
+.mfoot .btn{min-height:44px}
+.lbimg{display:block;max-width:100%;max-height:70vh;margin:0 auto;object-fit:contain;border-radius:var(--r-md)}
+.btn.danger{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.btn.danger:hover{color:var(--surface);filter:brightness(1.08)}
+.callout{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn);border-radius:var(--r-md);padding:10px 12px;font-size:13.5px;font-weight:500}
+.callout.bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad)}
+.kv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;margin:0;font-size:14px}
+.kv dt{color:var(--fg2)} .kv dd{margin:0;font-family:var(--mono);font-size:13px;color:var(--fg);text-align:right}
+.menu{position:fixed;z-index:55;min-width:220px;max-width:calc(100vw - 16px);background:var(--surface);border:1px solid var(--line2);border-radius:var(--r-md);box-shadow:var(--sh3);padding:6px;display:flex;flex-direction:column}
+.menu button{font:inherit;font-size:14px;font-weight:500;text-align:left;background:none;border:0;color:var(--fg);min-height:44px;padding:0 12px;border-radius:var(--r-sm);cursor:pointer}
+.menu button:hover,.menu button:focus-visible{background:var(--hover);outline-offset:-2px}
+.menu button.bad{color:var(--bad)}
+.menu hr{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
+.toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:70;background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;box-shadow:var(--sh3);max-width:calc(100vw - 32px);text-align:center}
+.toast:empty{display:none}
+.shot{align-self:flex-start;max-width:100%;padding:0;border:1px solid var(--line);border-radius:var(--r-md);background:var(--sunken);cursor:zoom-in;overflow:hidden;min-height:44px;min-width:44px;display:block}
+.shot img{display:block;max-height:220px;max-width:100%;object-fit:contain}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--s2)}
+.links a{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);color:var(--fg);text-decoration:none;font-weight:600;font-size:14px;box-shadow:var(--sh1);min-width:0}
+.links a:hover{border-color:var(--accent);color:var(--accent)}
+.note a{color:var(--accent);font-weight:600}
+.modebox{display:flex;gap:var(--s3);align-items:center;justify-content:space-between;flex-wrap:wrap}
+.modebox .acts{display:flex;gap:var(--s2);flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -298,6 +337,8 @@ td.note{font-size:13px}
   <main id="main"><div class="sr" role="status">Loading the latest snapshot…</div><div class="kpis" aria-hidden="true"><div class="kpi sk"><span class="skl w40"></span><span class="skl w70 h22"></span><span class="skl w55"></span></div><div class="kpi sk"><span class="skl w40"></span><span class="skl w70 h22"></span><span class="skl w55"></span></div><div class="kpi sk"><span class="skl w40"></span><span class="skl w70 h22"></span><span class="skl w55"></span></div></div></main>
 </div>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 (function(){
@@ -341,8 +382,20 @@ td.note{font-size:13px}
     pulse:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',
     check:'<path d="M5 12l4.5 4.5L19 7"/>',
     alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.2v.1"/>',
-    inbox:'<path d="M4 13l2-8h12l2 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>'
+    inbox:'<path d="M4 13l2-8h12l2 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>',
+    chev:'<path d="M6 9l6 6 6-6"/>',
+    ext:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'
   };
+  const LINKS={
+    plaidLogs:['Plaid logs','https://dashboard.plaid.com/developers/logs'],
+    plaidDebugger:['Plaid Item Debugger','https://dashboard.plaid.com/activity/debugger'],
+    plaidSupport:['Plaid support cases','https://dashboard.plaid.com/support'],
+    plaidBilling:['Plaid billing','https://dashboard.plaid.com/settings/team/billing'],
+    supabase:['Supabase project','https://supabase.com/dashboard/project/nagsivpurrsrkwfdojdj'],
+    supabaseFns:['Supabase function logs','https://supabase.com/dashboard/project/nagsivpurrsrkwfdojdj/functions'],
+    ghReaper:['GitHub Actions: cleanup workflow','https://github.com/Chani1228/blo-vault/actions/workflows/plaid-reaper.yml']
+  };
+  const lnk=(k,label)=>`<a href="${LINKS[k][1]}" target="_blank" rel="noopener">${esc(label||LINKS[k][0])}</a>`;
   const svg=(n,cls='i')=>`<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
   const iconFor=l=>/cost|est\./i.test(l)?'dollar':/bug|open|^new$|fixed/i.test(l)?'bug':/link|items?$/i.test(l)?'link':/age/i.test(l)?'clock':/mode|run|error/i.test(l)?'shield':/code|redeem|permanent|30-day/i.test(l)?'ticket':/user|total|active|trial|pro/i.test(l)?'users':'pulse';
 
@@ -433,6 +486,10 @@ td.note{font-size:13px}
       kpi('Open bug reports',f.items?open.length:'—',`${n0(f.counts?.pending)} new`),
       kpi('Cleanup job',human(r.mode_hint)||'—',lastRun?'last run '+ago(lastRun.run_at):'no runs yet')].join('')}</div>
     <section><div class="sechead"><h2>Needs attention</h2></div>${attnHtml(attentionRows())}</section>
+    <section><div class="sechead"><h2>Shortcuts</h2><span class="note">Open in a new tab</span></div>
+      <div class="links">${['plaidLogs','plaidDebugger','plaidSupport','plaidBilling','supabase','supabaseFns','ghReaper'].map(k=>`<a href="${LINKS[k][1]}" target="_blank" rel="noopener">${svg('ext')}<span>${esc(LINKS[k][0])}</span></a>`).join('')}</div></section>
+    <section><div class="sechead"><h2>Recent admin activity</h2></div>
+      ${table(['When','Action','Summary'],(Array.isArray(snap.audit)?snap.audit:[]).map(a=>`<tr><td>${esc(fmtDT(a.created_at))}</td><td>${esc(human(a.action))}</td><td class="note">${esc(a.summary||a.target||'')}</td></tr>`),'No admin actions recorded yet.')}</section>
     <section><div class="sechead"><h2>Trends</h2><span class="note">Trend from this device's visits</span></div>
       <div class="grid2 g22">
         <div class="box"><div class="bh"><h3>Active bank links</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.items_active)})))}</div></div>
@@ -451,13 +508,14 @@ td.note{font-size:13px}
       <div class="box wide"><h3>Sign-ups per week</h3><div class="chart">${stackedBars(weeks,[['n','New accounts','var(--accent)']])}</div></div>
     </div>
     ${u.trial_ends_note?`<p class="note">${esc(u.trial_ends_note)}</p>`:''}
-    ${table(['User','Plan','Access','>Banks','Trial ends','Last opened','Joined'],(u.items||[]).map(x=>`<tr><td>${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${x.items_active??x.institution_count??'—'}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td></tr>`),'No users in this snapshot.')}`;
+    ${table(['User','Plan','Access','>Banks','Trial ends','Last opened','Joined','Actions'],(u.items||[]).map((x,i)=>`<tr><td>${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${x.items_active??x.institution_count??'—'}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn" type="button" data-umenu="${i}" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for user ${esc(x.short)}">Actions${svg('chev')}</button></td></tr>`),'No users in this snapshot.')}`;
   };
   P.plaid=()=>{
     const p=snap.plaid||{}, bp=p.by_product||{}, cp=p.cost_by_product||{};
     const insts=(p.by_institution_named||Object.entries(p.by_institution||{}).map(([id,n])=>({institution_id:id,name:inst(id),active:n}))).map(x=>({label:x.name||inst(x.institution_id),v:n0(x.active)}));
     return `<div class="kpis">${[kpi('Active links',p.active_items??'—'),kpi('Transactions Items',n0(bp.transactions),usd(cp.transactions)+' / mo'),kpi('Investments Items',n0(bp.investments),usd(cp.investments)+' / mo'),kpi('Est. total / mo',usd(p.est_monthly_cost_usd))].join('')}</div>
     <p class="note">${esc(p.cost_basis_note||'')}</p>
+    <p class="note">Item details: ${lnk('plaidDebugger')} (search for the short Item id from the table below) · ${lnk('plaidLogs')} · ${lnk('plaidSupport')} · ${lnk('plaidBilling')}</p>
     <div class="grid2">
       <div class="box"><h3>Links by institution</h3>${hbars(insts)}</div>
       <div class="box"><h3>Est. cost by user</h3>${hbars((p.per_user||[]).map(x=>({label:who(x.user_short),v:n0(x.est_cost)})),{fmt:v=>'$'+v.toFixed(2),color:'var(--violet)'})}</div>
@@ -478,6 +536,10 @@ td.note{font-size:13px}
     const daily=(r.daily||[]).map(d=>({label:fmtDate(d.date+'T12:00:00'),...d}));
     const reasons=Object.entries(r.by_reason||{}).map(([k,v])=>({label:human(k),v:n0(v)})).sort((a,b)=>b.v-a.v);
     return `<div class="kpis">${[kpi('Mode',human(r.mode_hint)||'—',r.mode_hint==='live'?'removals are real':'records only, removes nothing'),kpi('Runs recorded',(r.last_runs||[]).length),kpi('Errors in last run',n0(((r.last_runs||[])[0]||{}).counts?.error))].join('')}</div>
+    ${(()=>{const m=reaperMode(), live=m==='live', at=snap.settings?.reaper_mode_updated_at;
+      return `<section><div class="sechead"><h2>Controls</h2></div><div class="box"><div class="modebox"><div><div>Current mode: <span class="pill ${live?'bad':'mute'}">${live?'Live':m==='dry_run'?'Dry run':'Unknown'}</span></div><div class="note">${live?'Live: the job removes real bank connections at Plaid.':'Dry run: the job only records what it would remove.'}${at?' Changed '+esc(ago(at))+'.':''}</div></div>
+      <div class="acts"><button class="btn${live?'':' danger'}" type="button" data-act="mode"${m?'':' disabled'}>${live?'Switch to dry run':'Switch to live'}</button><button class="btn" type="button" data-act="run">Run now</button></div></div>
+      <p class="note">Scheduled runs: ${lnk('ghReaper')} · ${lnk('supabaseFns')}</p></div></section>`})()}
     <div class="grid2">
       <div class="box wide"><h3>Decisions per day (30 days)</h3><div class="chart">${stackedBars(daily,[['keep','Keep','var(--good)'],['would_remove','Would remove','var(--warn)'],['removed','Removed','var(--violet)'],['error','Error','var(--bad)'],['skip','Skip','var(--fg3)']])}</div></div>
       <div class="box"><h3>Reasons</h3>${hbars(reasons)}</div>
@@ -499,14 +561,283 @@ td.note{font-size:13px}
     </div>
     <section><div class="sechead"><h2>Reports</h2><div class="filters" role="group" aria-label="Filter by status">${[['open','Open'],['all','All'],...STATUS.map(s=>[s[0],s[1]])].map(([k,l])=>`<button class="btn" type="button" data-filter="${k}" aria-pressed="${fbFilter===k}">${esc(l)}</button>`).join('')}</div></div>
     <div class="fb">${list.length?list.map(x=>{const st=statusMeta(x.status);
-      return `<article class="card"><div class="ctop"><span class="pill ${st[2]}">${esc(st[1])}</span><span class="pill cat">${esc(x.category||'Other')}</span><span class="note">${fmtDT(x.created_at)}${x.user_short?' · user '+esc(x.user_short):''}${x.has_screenshot?' · screenshot attached':''}</span></div><div class="msg">${esc(x.message)}</div><div class="seg" role="group" aria-label="Set status">${STATUS.map(s=>`<button class="btn" type="button" data-id="${esc(x.id)}" data-status="${s[0]}" aria-pressed="${x.status===s[0]}"${busy[x.id]?' disabled':''}>${esc(s[1])}</button>`).join('')}</div>${cardErr[x.id]?`<div class="err" role="alert">${esc(cardErr[x.id])}</div>`:''}</article>`}).join(''):`<div class="empty"><span class="eico neutral">${svg('inbox')}</span><p>No reports with this status.</p><p>Reports sent from the app’s Feedback screen appear here.</p></div>`}</div></section>`;
+      return `<article class="card"><div class="ctop"><span class="pill ${st[2]}">${esc(st[1])}</span><span class="pill cat">${esc(x.category||'Other')}</span><span class="note">${fmtDT(x.created_at)}${x.user_short?' · user '+esc(x.user_short):''}${x.has_screenshot?' · screenshot attached':''}</span></div><div class="msg">${esc(x.message)}</div>${/^https:\/\//.test(x.screenshot_url||'')?`<button class="shot" type="button" data-shot="${esc(x.id)}" aria-label="Open screenshot full size"><img src="${esc(x.screenshot_url)}" alt="Screenshot attached to this report" loading="lazy"></button><span class="note">Screenshot link expires after about 10 minutes; refresh to renew it.</span>`:''}<div class="seg" role="group" aria-label="Set status">${STATUS.map(s=>`<button class="btn" type="button" data-id="${esc(x.id)}" data-status="${s[0]}" aria-pressed="${x.status===s[0]}"${busy[x.id]?' disabled':''}>${esc(s[1])}</button>`).join('')}</div>${cardErr[x.id]?`<div class="err" role="alert">${esc(cardErr[x.id])}</div>`:''}</article>`}).join(''):`<div class="empty"><span class="eico neutral">${svg('inbox')}</span><p>No reports with this status.</p><p>Reports sent from the app’s Feedback screen appear here.</p></div>`}</div></section>`;
   };
   P.beta=()=>{
     const b=snap.beta_invites||{}, t=b.by_tier||{};
-    return `<div class="kpis">${[kpi('Unused codes',n0(b.unused)),kpi('Redeemed',n0(b.redeemed)),kpi('Permanent',`${n0(t.permanent?.redeemed)} / ${n0(t.permanent?.issued)}`,'redeemed / issued'),kpi('30-day',`${n0(t.limited?.redeemed)} / ${n0(t.limited?.issued)}`,'redeemed / issued')].join('')}</div>
-    <p class="note">Issue codes with <span class="mono">make beta-invite TIER=permanent NOTE="name"</span> or <span class="mono">TIER=limited</span>.</p>
-    ${table(['Code','Tier','For','Created','Redeemed'],(b.items||[]).map(x=>`<tr><td class="mono">${esc(x.code_masked)}</td><td>${esc(x.tier)}</td><td>${esc(x.note)}</td><td>${fmtDate(x.created_at)}</td><td>${x.redeemed_at?fmtDate(x.redeemed_at)+' · <span class="mono">'+esc(x.redeemed_by_short)+'</span>':'<span class="pill mute">unused</span>'}</td></tr>`),'No invites issued yet.')}`;
+    return `<div class="sechead"><h2>Invites</h2><button class="btn primary" type="button" data-act="invite">New invite</button></div>
+    <div class="kpis">${[kpi('Unused codes',n0(b.unused)),kpi('Redeemed',n0(b.redeemed)),kpi('Permanent',`${n0(t.permanent?.redeemed)} / ${n0(t.permanent?.issued)}`,'redeemed / issued'),kpi('30-day',`${n0(t.limited?.redeemed)} / ${n0(t.limited?.issued)}`,'redeemed / issued')].join('')}</div>
+    <p class="note">Create a code with New invite. The full code is shown once, right after it is created.</p>
+    ${table(['Code','Tier','For','Created','Redeemed','Actions'],(b.items||[]).map((x,i)=>`<tr><td class="mono">${esc(x.code_masked)}</td><td>${esc(x.tier)}</td><td>${esc(x.note)}</td><td>${fmtDate(x.created_at)}</td><td>${x.redeemed_at?fmtDate(x.redeemed_at)+' · <span class="mono">'+esc(x.redeemed_by_short)+'</span>':'<span class="pill mute">unused</span>'}</td><td>${x.redeemed_at?'':`<button class="btn" type="button" data-inv="${i}" aria-label="Revoke invite ${esc(x.code_masked)}">Revoke</button>`}</td></tr>`),'No invites issued yet.')}`;
   };
+
+  /* ---------- admin actions: toast, modal, menu ---------- */
+  const reaperMode=()=>{const m=snap.settings?.reaper_mode||snap.reaper?.mode_hint;return m==='live'?'live':m==='dry_run'?'dry_run':''};
+  let toastT=null;
+  function toast(msg){const t=$('toast');t.textContent=msg;clearTimeout(toastT);toastT=setTimeout(()=>{t.textContent=''},5000);}
+  const errMsg=err=>err instanceof TypeError?'Network error — try again.':(err&&err.message)||'Something went wrong.';
+  function fmtVal(v){
+    if(v==null||v==='') return 'none';
+    if(typeof v==='object'){ if(v.source) return human(v.source)+(v.expires_at?' until '+fmtDate(v.expires_at):''); return JSON.stringify(v); }
+    return typeof v==='string'&&ENUM[v]?ENUM[v]:String(v);
+  }
+  function kvHtml(o,d=0){
+    if(o==null||typeof o!=='object') return esc(fmtVal(o));
+    const e=Object.entries(o); if(!e.length) return '<span class="note">none</span>';
+    return '<dl class="kv">'+e.map(([k,v])=>`<dt>${esc(human(k))}</dt><dd>${v&&typeof v==='object'&&!v.source&&d<2?kvHtml(v,d+1):esc(fmtVal(v))}</dd>`).join('')+'</dl>';
+  }
+
+  const mroot=document.createElement('div'); mroot.className='mback'; mroot.hidden=true; document.body.appendChild(mroot);
+  let M=null;
+  const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+  const selOf=el=>{if(!el||!el.getAttribute) return '';for(const a of ['data-umenu','data-inv','data-act','data-shot']){if(el.hasAttribute(a)) return '['+a+'="'+el.getAttribute(a)+'"]';}return '';};
+  const isVis=(f,v)=>!f.showIf||f.showIf(v);
+  const expected=()=>{const c=M.cfg;return typeof c.confirmText==='function'?String(c.confirmText(M.vals)||''):String(c.confirmText||'')};
+  const needsConfirm=()=>M.cfg.confirmText!=null&&(!M.cfg.preview||M.phase==='confirm');
+
+  function fieldHtml(f){
+    const id='mf-'+f.name, v=M.vals[f.name];
+    let ctl;
+    if(f.type==='select') ctl=`<select id="${id}" data-mf="${f.name}">${f.options.map(([val,l])=>`<option value="${esc(val)}"${val===v?' selected':''}>${esc(l)}</option>`).join('')}</select>`;
+    else ctl=`<input id="${id}" data-mf="${f.name}" type="${f.type||'text'}" value="${esc(v)}"${f.min!=null?` min="${f.min}" max="${f.max}" inputmode="numeric"`:''} autocomplete="off" autocapitalize="off" spellcheck="false">`;
+    return `<div class="field" data-fw="${f.name}"${isVis(f,M.vals)?'':' hidden'}><label for="${id}">${esc(f.label)}</label>${ctl}${f.hint?`<span class="hint">${esc(f.hint)}</span>`:''}</div>`;
+  }
+  function drawModal(focusSel){
+    const c=M.cfg, ph=M.phase;
+    let body, foot;
+    if(ph==='done'){ body=M.doneHtml; foot='<button class="btn primary" type="button" data-mclose data-autofocus>Done</button>'; }
+    else if(c.closeOnly){ body=c.html; foot='<button class="btn primary" type="button" data-mclose data-autofocus>Close</button>'; }
+    else {
+      body=c.intro||'';
+      if(!(c.preview&&ph==='confirm')) body+=(c.fields||[]).map(fieldHtml).join('');
+      if(c.preview&&ph==='confirm'){
+        body+=M.pv.html;
+        if(M.pv.force) body+=`<label class="check"><input type="checkbox" data-mf="force"${M.vals.force?' checked':''}><span>${esc(M.pv.force)}</span></label>`;
+      }
+      if(needsConfirm()) body+=`<div class="field"><label for="mConfirm">Type <b class="mono" id="mExp"></b> to confirm</label><input id="mConfirm" data-mc="1" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(M.typed||'')}"></div>`;
+      if(M.notice) body+=M.notice;
+      body+='<div class="err" id="mErr" role="alert"></div>';
+      const sub=M.subLabel||(c.preview&&ph==='input'?(c.previewLabel||'Preview'):c.submit);
+      foot=`${c.preview&&ph==='confirm'?'<button class="btn" type="button" data-mback>Back</button>':''}<button class="btn" type="button" data-mclose>Cancel</button>${M.altLabel?`<button class="btn danger" type="button" data-malt>${esc(M.altLabel)}</button>`:''}<button class="btn ${c.danger&&!(c.preview&&ph==='input')?'danger':'primary'}" type="submit" id="mSubmit">${esc(sub)}</button>`;
+    }
+    mroot.innerHTML=`<form class="mdlg${c.wide?' wide':''}" id="mForm" role="dialog" aria-modal="true" aria-labelledby="mTitle" tabindex="-1" novalidate><h2 id="mTitle">${esc(c.title)}</h2><div class="mbody">${body}</div><div class="mfoot">${foot}</div></form>`;
+    refreshModalState();
+    const dlg=$('mForm');
+    const t=(focusSel&&dlg.querySelector(focusSel))||dlg.querySelector('[data-autofocus]')||dlg.querySelector('input:not([hidden]),select')||dlg.querySelector('button');
+    (t||dlg).focus();
+  }
+  function refreshModalState(){
+    if(!M) return;
+    const c=M.cfg;
+    (c.fields||[]).forEach(f=>{const w=mroot.querySelector('[data-fw="'+f.name+'"]'); if(w) w.hidden=!isVis(f,M.vals);});
+    const exp=$('mExp'); if(exp) exp.textContent=expected()||'…';
+    const sub=$('mSubmit');
+    if(sub){
+      let ok=true;
+      if(M.phase!=='confirm'||!c.preview) (c.fields||[]).forEach(f=>{if(f.required&&isVis(f,M.vals)&&!String(M.vals[f.name]||'').trim()) ok=false;});
+      if(needsConfirm()){const e=expected(); if(!e||M.typed!==e) ok=false;}
+      sub.disabled=M.pending||!ok;
+    }
+    mroot.querySelectorAll('input,select,button').forEach(el=>{ if(el.id!=='mSubmit') el.disabled=M.pending; });
+  }
+  function setErr(m){const e=$('mErr'); if(e) e.textContent=m||'';}
+  function openModal(cfg,opener){
+    closeMenu();
+    const vals={}; (cfg.fields||[]).forEach(f=>{vals[f.name]=f.value!=null?f.value:''});
+    M={cfg,opener,openerSel:selOf(opener),pending:false,phase:cfg.preview?'input':'form',vals,typed:'',pv:null,doneHtml:''};
+    mroot.hidden=false; document.body.classList.add('mopen'); $('appView').inert=true;
+    drawModal();
+  }
+  function closeModal(){
+    if(!M) return;
+    const o=M.opener&&M.opener.isConnected?M.opener:(M.openerSel?document.querySelector(M.openerSel):null);
+    M=null; mroot.hidden=true; mroot.innerHTML=''; document.body.classList.remove('mopen'); $('appView').inert=false;
+    const f=o||$('panel')||$('main'); if(f&&f.focus) f.focus({preventScroll:true});
+  }
+  async function submitModal(){
+    if(!M||M.pending||M.phase==='done') return;
+    const c=M.cfg, sub=$('mSubmit'); if(!sub||sub.disabled) return;
+    const verr=c.validate?c.validate(M.vals,M.phase):''; if(verr){setErr(verr);return;}
+    setErr(''); M.pending=true; refreshModalState(); sub.textContent='Working…';
+    try{
+      if(c.preview&&M.phase==='input'){
+        M.pv=await c.preview(M.vals); M.phase='confirm'; M.pending=false; M.typed=''; drawModal('#mConfirm'); return;
+      }
+      const res=await c.run(M.vals,M.pv,M.extra);
+      toast(typeof c.toast==='function'?c.toast(res):c.toast); load();
+      if(c.done){ M.doneHtml=c.done(res); M.phase='done'; M.pending=false; drawModal(); }
+      else closeModal();
+    }catch(err){
+      if(!M) return;
+      M.pending=false; M.extra=null;
+      const h=c.onError?c.onError(err):null;
+      if(h){ M.notice=h.html||''; M.altLabel=h.altLabel||''; M.subLabel=h.subLabel||''; drawModal(h.altLabel?'[data-malt]':'#mSubmit'); setErr(h.error||''); return; }
+      refreshModalState();
+      const s=$('mSubmit'); if(s) s.textContent=M.subLabel||(c.preview&&M.phase==='input'?(c.previewLabel||'Preview'):c.submit);
+      setErr(errMsg(err));
+    }
+  }
+  mroot.addEventListener('submit',e=>{e.preventDefault();submitModal();});
+  mroot.addEventListener('input',e=>{
+    if(!M) return; const el=e.target;
+    if(el.dataset.mc){M.typed=el.value;}
+    else if(el.dataset.mf){M.vals[el.dataset.mf]=el.type==='checkbox'?el.checked:el.value;}
+    refreshModalState();
+  });
+  mroot.addEventListener('click',async e=>{
+    if(!M) return;
+    if(e.target===mroot&&!M.pending){closeModal();return;}
+    if(e.target.closest('[data-mclose]')&&!M.pending){closeModal();return;}
+    if(e.target.closest('[data-malt]')&&!M.pending){M.extra={force_unassociated:true};submitModal();return;}
+    if(e.target.closest('[data-mback]')&&!M.pending){M.phase='input';M.typed='';drawModal();return;}
+    if(e.target.closest('[data-copy]')){
+      const inp=$('mCode'), msg=$('mCopyMsg'); if(!inp) return;
+      let ok=false; try{await navigator.clipboard.writeText(inp.value);ok=true;}catch(x){}
+      if(!ok){inp.focus();inp.select();try{ok=document.execCommand('copy')}catch(x){}}
+      if(msg) msg.textContent=ok?'Copied to clipboard.':'Code selected. Press Ctrl/Cmd+C to copy.';
+    }
+  });
+  mroot.addEventListener('focusin',e=>{if(e.target.id==='mCode') e.target.select();});
+  mroot.addEventListener('keydown',e=>{
+    if(!M) return;
+    if(e.key==='Escape'){e.preventDefault();if(!M.pending) closeModal();return;}
+    if(e.key!=='Tab') return;
+    const dlg=$('mForm'); const fs=Array.from(dlg.querySelectorAll(FOCUSABLE)).filter(f=>!f.closest('[hidden]'));
+    if(!fs.length){e.preventDefault();dlg.focus();return;}
+    const a=fs[0], z=fs[fs.length-1];
+    if(e.shiftKey&&(document.activeElement===a||document.activeElement===dlg)){e.preventDefault();z.focus();}
+    else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}
+  });
+
+  /* menu (popover of buttons) */
+  let menu=null;
+  function closeMenu(refocus){
+    if(!menu) return;
+    const b=menu.btn; menu.el.remove(); b.setAttribute('aria-expanded','false'); menu=null;
+    if(refocus&&b.isConnected) b.focus();
+  }
+  function openMenu(btn){
+    closeMenu();
+    const x=(snap.users?.items||[])[+btn.dataset.umenu]; if(!x) return;
+    const items=[['grant','Grant access'],['extend','Extend access'],['revoke','Revoke access','bad']];
+    if(!isAdminRow(x)) items.push(['sep'],['reassign','Move data to another user'],['delete','Delete user','bad']);
+    const el=document.createElement('div'); el.className='menu'; el.setAttribute('role','menu'); el.setAttribute('aria-label','Actions for user '+x.short);
+    el.innerHTML=items.map(i=>i[0]==='sep'?'<hr role="separator">':`<button type="button" role="menuitem" data-mi="${i[0]}"${i[2]?` class="${i[2]}"`:''}>${esc(i[1])}</button>`).join('');
+    document.body.appendChild(el);
+    const r=btn.getBoundingClientRect(), w=el.offsetWidth, h=el.offsetHeight;
+    el.style.left=Math.max(8,Math.min(r.right-w,innerWidth-w-8))+'px';
+    el.style.top=Math.max(8,(r.bottom+4+h>innerHeight)?r.top-h-4:r.bottom+4)+'px';
+    btn.setAttribute('aria-expanded','true'); menu={el,btn,x};
+    el.querySelector('button').focus({preventScroll:true});
+  }
+  document.addEventListener('keydown',e=>{
+    if(!menu) return;
+    const bs=Array.from(menu.el.querySelectorAll('button')), i=bs.indexOf(document.activeElement);
+    if(e.key==='Escape'){e.preventDefault();closeMenu(true);}
+    else if(e.key==='Tab'){closeMenu();}
+    else if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();bs[e.key==='Home'?0:e.key==='End'?bs.length-1:e.key==='ArrowDown'?(i+1)%bs.length:(i-1+bs.length)%bs.length].focus();}
+  });
+  window.addEventListener('scroll',e=>{if(menu&&!menu.el.contains(e.target)) closeMenu();},true);
+  window.addEventListener('resize',()=>closeMenu());
+
+  /* action definitions */
+  const isAdminRow=x=>!!(x.is_admin||x.is_ops_admin||x.ops_admin);
+  const uidOf=(x,v)=>String(x.user_id||x.id||(v&&v.user_id)||'').trim();
+  const idFields=x=>(x.user_id||x.id)?[]:[{name:'user_id',label:'Full user id',required:true,hint:'The snapshot lists only the short id ('+x.short+'). Paste the full user id.'}];
+  const uidCheck=(x,v)=>{const id=uidOf(x,v); if(!id) return 'Enter the full user id.'; if(/^[0-9a-f]{8}$/i.test(x.short||'')&&!id.toLowerCase().startsWith(x.short.toLowerCase())) return 'That id does not match user '+x.short+'.'; return '';};
+  const daysOf=v=>{const n=Number(v);return Number.isInteger(n)&&n>=1&&n<=365?n:0;};
+  const daysField={name:'days',label:'Number of days (1–365)',type:'number',min:1,max:365,value:'30',required:true,showIf:v=>v.pick==='custom'};
+  const userLine=x=>`<p>User <b class="mono">${esc(x.short)}</b>${x.invite_note?' ('+esc(x.invite_note)+')':''}</p>`;
+
+  function actGrant(x,btn){
+    openModal({title:'Grant access',intro:userLine(x)+'<p>Gives this user full access without a paid subscription.</p>',
+      fields:[...idFields(x),{name:'pick',label:'Access type',type:'select',value:'beta_permanent',options:[['beta_permanent','Beta · permanent'],['beta_limited','Beta · 30 days'],['custom','Beta · custom days'],['owner','Owner (no expiry)']]},daysField,{name:'note',label:'Note (optional)'}],
+      validate:v=>uidCheck(x,v)||(v.pick==='custom'&&!daysOf(v.days)?'Days must be a whole number from 1 to 365.':''),
+      submit:'Grant access',toast:'Access granted',
+      run:v=>{const limited=v.pick==='beta_limited'||v.pick==='custom';
+        const b={user_id:uidOf(x,v),source:v.pick==='custom'?'beta_limited':v.pick}; if(limited) b.days=v.pick==='custom'?daysOf(v.days):30; if(v.note.trim()) b.note=v.note.trim();
+        return api('grant_entitlement',b);}},btn);
+  }
+  function actExtend(x,btn){
+    openModal({title:'Extend access',intro:userLine(x)+'<p>Adds days to the current expiry, or starts from today if access already ended.</p>',
+      fields:[...idFields(x),{name:'pick',label:'Extend by',type:'select',value:'30',options:[['30','30 days'],['custom','Custom days']]},daysField],
+      validate:v=>uidCheck(x,v)||(v.pick==='custom'&&!daysOf(v.days)?'Days must be a whole number from 1 to 365.':''),
+      submit:'Extend',toast:r=>r&&r.expires_at?'Access extended until '+fmtDate(r.expires_at):'Access extended',
+      run:v=>api('extend_entitlement',{user_id:uidOf(x,v),days:v.pick==='custom'?daysOf(v.days):30})},btn);
+  }
+  function actRevoke(x,btn){
+    openModal({title:'Revoke access',intro:userLine(x)+'<p>Removes the beta or owner access. The user keeps the account and any paid App Store subscription.</p>',
+      fields:idFields(x),validate:v=>uidCheck(x,v),danger:true,submit:'Revoke access',toast:'Access revoked',
+      run:v=>api('revoke_entitlement',{user_id:uidOf(x,v)})},btn);
+  }
+  function actDelete(x,btn){
+    openModal({title:'Delete user',danger:true,
+      intro:userLine(x)+'<div class="callout bad">This permanently deletes the account. It cannot be undone.</div><p>It removes the user’s bank connections at Plaid, deletes their data on the server, and deletes the account. Bank connections that were linked outside a Plaid user session cannot be removed from the server; they are shown as a count afterwards so you can remove them in the Plaid dashboard.</p>',
+      fields:idFields(x),confirmText:v=>uidOf(x,v).slice(0,8),validate:v=>uidCheck(x,v),submit:'Delete user',
+      toast:r=>n0(r&&r.kept_unassociated_items)?'Data deleted; '+n0(r.kept_unassociated_items)+' bank connection(s) kept':'User deleted',
+      run:(v,pv,extra)=>api('delete_user',Object.assign({user_id:uidOf(x,v),confirm:uidOf(x,v).slice(0,8)},extra||{})),
+      onError:err=>{
+        const b=err.body||{};
+        if(err.status===409&&b.error==='unassociated_items'){
+          const ids=Array.isArray(b.item_ids_short)?b.item_ids_short:[];
+          return {html:`<div class="callout bad"><b>${n0(b.count)||ids.length} bank connection(s) are not attached to a Plaid user.</b>${ids.length?'<br>Item ids: <span class="mono">'+ids.map(esc).join(', ')+'</span>':''}<br>These connections can only be removed from the user’s app or the Plaid dashboard; deleting now would leave them billing.</div>`,
+            altLabel:'Delete anyway, keep those connections',error:''};
+        }
+        if(err.status===502&&b.error==='plaid_terminate_failed') return {html:'',subLabel:'Retry',error:'Nothing was deleted. Plaid could not remove the bank connections'+(b.plaid_error?': '+(typeof b.plaid_error==='string'?b.plaid_error:JSON.stringify(b.plaid_error)):'.')};
+        return null;
+      },
+      done:r=>{if(n0(r.kept_unassociated_items)) return `<div class="callout">The user’s data was deleted, but ${n0(r.kept_unassociated_items)} bank connection(s) were kept and may still bill. The login account was not deleted${r.auth_user_deleted===false?' (auth_user_deleted: false)':''}. Remove the connections in ${lnk('plaidDebugger','the Plaid Item Debugger')}.</div><h3>Deleted rows</h3>${kvHtml(r.deleted_rows)}`;
+const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No Plaid user on record, so no bank connections were removed.',failed:'Plaid removal failed. Check the Plaid dashboard.'}[r.plaid]||('Plaid: '+esc(r.plaid||'unknown'));
+        const un=n0(r.unassociated_items);
+        return `<p>${esc(p)}</p>${un?`<div class="callout">${un} bank connection(s) were linked outside a Plaid user session and still exist. Remove them in ${lnk('plaidDebugger','the Plaid Item Debugger')}.</div>`:''}<h3>Deleted rows</h3>${kvHtml(r.deleted_rows)}`;}},btn);
+  }
+  function actReassign(x,btn){
+    openModal({title:'Move data to another user',danger:true,
+      intro:userLine(x)+'<p>Moves bank connections, accounts, sync flags and feedback from this user to another user. You will see what changes before anything is moved.</p>',
+      fields:[...idFields(x),{name:'new_user_id',label:'New user id (full)',required:true}],
+      previewLabel:'Preview move',
+      validate:(v,ph)=>ph==='input'?(uidCheck(x,v)||(v.new_user_id.trim()===uidOf(x,v)?'The new user must be a different user.':'')):'',
+      preview:async v=>{const r=await api('reassign_preview',{old_user_id:uidOf(x,v),new_user_id:v.new_user_id.trim()});
+        const en=r.entitlement||{};
+        return {force:r.new_has_active_items?'The new user already has active bank connections. Move anyway.':'',
+          html:`<h3>Rows that will move</h3>${kvHtml(r.counts)}<h3>Access</h3><dl class="kv"><dt>Old user</dt><dd>${esc(fmtVal(en.old))}</dd><dt>New user</dt><dd>${esc(fmtVal(en.new))}</dd><dt>Result</dt><dd>${esc(fmtVal(en.result))}</dd></dl>${r.new_has_active_items?'<div class="callout">The new user already has active bank connections.</div>':''}`};},
+      confirmText:v=>uidOf(x,v).slice(0,8),submit:'Move data',toast:'Data moved',
+      run:(v,pv)=>{const b={old_user_id:uidOf(x,v),new_user_id:v.new_user_id.trim(),confirm:uidOf(x,v).slice(0,8)}; if(v.force) b.force=true; return api('reassign_user',b);},
+      done:r=>`<p>Moved.</p>${kvHtml(r.moved)}`},btn);
+  }
+  function actInvite(btn){
+    openModal({title:'New invite',intro:'<p>Creates a beta invite code. The full code is shown only once after you create it.</p>',
+      fields:[{name:'pick',label:'Tier',type:'select',value:'permanent',options:[['permanent','Permanent'],['limited30','30-day'],['custom','Limited · custom days']]},{name:'days',label:'Number of days (1–365)',type:'number',min:1,max:365,value:'30',required:true,showIf:v=>v.pick==='custom'},{name:'note',label:'Name or note',hint:'Shown in the "For" column.'}],
+      validate:v=>v.pick==='custom'&&!daysOf(v.days)?'Days must be a whole number from 1 to 365.':'',
+      submit:'Create invite',toast:'Invite created',
+      run:v=>{const b={tier:v.pick==='permanent'?'permanent':'limited',note:v.note.trim()}; if(b.tier==='limited') b.duration_days=v.pick==='custom'?daysOf(v.days):30; return api('create_invite',b);},
+      done:r=>`<p>${r.tier==='limited'?'Limited · '+n0(r.duration_days)+' days':'Permanent'}${r.note?' · '+esc(r.note):''}</p><div class="field"><label for="mCode">Invite code</label><input id="mCode" readonly value="${esc(r.code)}"></div><div><button class="btn" type="button" data-copy>Copy code</button> <span class="note" id="mCopyMsg" role="status"></span></div><div class="callout">This is the only time the full code is shown. Copy it now.</div>`},btn);
+  }
+  function actRevokeInvite(x,btn){
+    openModal({title:'Revoke invite',intro:`<p>Invalidates the unused code <b class="mono">${esc(x.code_masked)}</b>${x.note?' for '+esc(x.note):''}. Nobody will be able to redeem it.</p>`,
+      danger:true,submit:'Revoke invite',toast:'Invite revoked',
+      run:()=>api('revoke_invite',{code_masked_prefix:x.code_masked_prefix||x.code_masked,created_at:x.created_at})},btn);
+  }
+  function actMode(btn){
+    const m=reaperMode(); if(!m) return; const toLive=m!=='live', word=toLive?'LIVE':'DRY RUN';
+    openModal({title:toLive?'Switch cleanup job to live':'Switch cleanup job to dry run',danger:toLive,
+      intro:toLive?'<div class="callout bad">Live mode removes real bank connections at Plaid for users the job decides to remove, and this cannot be undone.</div><p>Check the latest dry-run decisions first.</p>':'<p>The job will only record what it would remove. Nothing is removed at Plaid.</p>',
+      confirmText:word,submit:toLive?'Switch to live':'Switch to dry run',toast:toLive?'Cleanup job is now live':'Cleanup job is now dry run',
+      run:()=>api('set_reaper_mode',{mode:toLive?'live':'dry_run',confirm:word})},btn);
+  }
+  function actRun(btn){
+    const live=reaperMode()==='live';
+    openModal({title:'Run cleanup job now',
+      intro:live?'<div class="callout bad">The job is in live mode. This run removes real bank connections at Plaid.</div>':'<p>The job is in dry-run mode. This run only records what it would remove.</p>',
+      danger:live,submit:'Run now',toast:'Cleanup run finished',
+      run:()=>api('run_reaper',{}),
+      done:r=>`<p>Run finished. Summary:</p>${kvHtml(r.result)}`},btn);
+  }
+  function actShot(id,btn){
+    const it=(snap.feedback?.items||[]).find(x=>x.id===id); if(!it||!/^https:\/\//.test(it.screenshot_url||'')) return;
+    openModal({title:'Screenshot',wide:true,closeOnly:true,html:`<img class="lbimg" src="${esc(it.screenshot_url)}" alt="Screenshot attached to this report"><p class="note">This link expires after about 10 minutes. <a href="${esc(it.screenshot_url)}" target="_blank" rel="noopener">Open in a new tab</a></p>`},btn);
+  }
+  const MENU={grant:actGrant,extend:actExtend,revoke:actRevoke,reassign:actReassign,delete:actDelete};
 
   /* ---------- shell ---------- */
   function updateFade(){
@@ -525,6 +856,8 @@ td.note{font-size:13px}
   }
   function render(){
     const signedIn=!!session;
+    closeMenu();
+    if(!signedIn&&M) closeModal();
     $('loginView').hidden=signedIn; $('appView').hidden=!signedIn;
     if(!signedIn) return;
     $('who').textContent=session.user?.email||'';
@@ -567,7 +900,7 @@ td.note{font-size:13px}
     if(!s) throw Object.assign(new Error('Signed out'),{status:401});
     const res=await fetch(API+'?action='+action,{method:'POST',headers:{'Authorization':'Bearer '+s.access_token,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify(body||{})});
     let json=null; try{json=await res.json()}catch(e){}
-    if(!res.ok) throw Object.assign(new Error((json&&(json.error||json.message))||('Request failed ('+res.status+')')),{status:res.status});
+    if(!res.ok) throw Object.assign(new Error((json&&(json.error||json.message))||('Request failed ('+res.status+')')),{status:res.status,body:json});
     return json;
   }
   async function load(){
@@ -597,6 +930,17 @@ td.note{font-size:13px}
   }
 
   document.addEventListener('click',e=>{
+    const mi=e.target.closest('[data-mi]');
+    if(mi&&menu){const {x,btn}=menu; closeMenu(); MENU[mi.dataset.mi](x,btn); return;}
+    const um=e.target.closest('[data-umenu]');
+    if(um){ if(menu&&menu.btn===um) closeMenu(true); else openMenu(um); return; }
+    if(menu&&!menu.el.contains(e.target)) closeMenu();
+    const ac=e.target.closest('[data-act]');
+    if(ac&&!ac.disabled){ const k=ac.dataset.act; if(k==='invite') actInvite(ac); else if(k==='mode') actMode(ac); else if(k==='run') actRun(ac); return; }
+    const iv=e.target.closest('[data-inv]');
+    if(iv){ const x=(snap.beta_invites?.items||[])[+iv.dataset.inv]; if(x) actRevokeInvite(x,iv); return; }
+    const sh=e.target.closest('[data-shot]');
+    if(sh){ actShot(sh.dataset.shot,sh); return; }
     const t=e.target.closest('[data-tab]'); if(t){go(t.dataset.tab);return;}
     const g=e.target.closest('[data-goto]'); if(g){go(g.dataset.goto);return;}
     const f=e.target.closest('[data-filter]'); if(f){fbFilter=f.dataset.filter;render();const nf=document.querySelector('[data-filter="'+fbFilter+'"]'); if(nf) nf.focus({preventScroll:true});return;}
