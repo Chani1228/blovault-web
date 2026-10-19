@@ -1,6 +1,6 @@
 # BLO VAULT Privacy Policy
 
-**Last Updated:** October 14, 2026
+**Last Updated:** October 18, 2026
 
 BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong). We designed the App so that sensitive financial details stay on your device whenever possible.
 
@@ -39,7 +39,7 @@ Categories Plaid may share with the App can include institution and account iden
 
 ### 2.1 Optional in-app feedback
 
-If you use the feedback feature (for example, Settings → Send feedback), you may submit a text message and optionally attach a screenshot. We store that content on our backend (Supabase, including file storage for images) to triage bugs, improve the App, and respond when needed. It may be associated with your pseudonymous Supabase user identifier. Do not include passwords, full account numbers, card numbers, or other secrets in feedback text. Screenshots may unintentionally show sensitive information — crop or avoid sensitive screens if you prefer not to share them.
+If you use the feedback feature (for example, Settings → Send feedback), you may submit a text message and optionally attach a screenshot. We store that content on our backend (Supabase, including file storage for images) to triage bugs, improve the App, and respond when needed. It may be associated with your pseudonymous Supabase user identifier. Do not include passwords, full account numbers, card numbers, or other secrets in feedback text. Screenshots may unintentionally show sensitive information — crop or avoid sensitive screens if you prefer not to share them. Each report also includes the App version, iOS version, and device model. You may optionally add an email address for a reply and, for problem reports, sync diagnostics (bank connection status and recent sync times, without balances, amounts, or merchant names). We use this only to respond to your report and fix problems, and it is deleted when you delete your account.
 
 ## 3. Local AI processing
 

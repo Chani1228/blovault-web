@@ -217,6 +217,28 @@ td.note{font-size:13px}
 .filters .btn{border-radius:999px;padding-inline:14px;flex:0 0 auto}
 @media (max-width:639px){.sechead:has(>.filters){flex-direction:column;align-items:stretch}}
 
+/* inbox + beta */
+.srcb{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--sunken);color:var(--fg2)}
+.srcb.email{background:var(--accent-bg);color:var(--accent)}
+.srcb .i{width:14px;height:14px}
+.ctitle{font-weight:650;overflow-wrap:anywhere}
+.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.meta{font-size:12.5px;color:var(--fg3);overflow-wrap:anywhere}
+.anote{font-size:13px;color:var(--fg3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reply{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2)}
+.reply .addr{font-family:var(--mono);font-size:13px;background:var(--sunken);border-radius:var(--r-sm);padding:6px 10px;user-select:all;-webkit-user-select:all;overflow-wrap:anywhere;min-width:0}
+.reply a.btn{text-decoration:none}
+.cacts{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.diag{font-family:var(--mono);font-size:12px;line-height:1.45;background:var(--sunken);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;margin:0;max-height:240px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--fg)}
+.field textarea{font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line2);border-radius:var(--r-md);background:var(--bg);color:var(--fg);width:100%;min-height:96px;resize:vertical}
+.field textarea:focus-visible{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.tester .trow{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap}
+.tester .tname{font-weight:650;overflow-wrap:anywhere;min-width:0}
+.tester .tsub{font-size:13px;color:var(--fg3)}
+.tester .tsub.warn{color:var(--warn);font-weight:600} .tester .tsub.bad{color:var(--bad);font-weight:600}
+.cta{display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap}
+.cta .btn.primary{min-height:48px;padding-inline:22px;font-size:15px}
+
 /* buttons */
 .btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line2);background:var(--surface);color:var(--fg);padding:0 14px;border-radius:var(--r-md);cursor:pointer;min-height:38px;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--sh1);white-space:nowrap}
 @media (pointer:coarse){.btn{min-height:44px}}
@@ -359,14 +381,15 @@ body.mopen{overflow:hidden}
   const inst=id=>INST[id]||id||'—';
   const STATUS=[['pending','New','info'],['approved','Accepted','warn'],['implementing','Fixing','warn'],['implemented','Fixed','good'],['rejected','Won’t fix','mute']];
   const statusMeta=s=>STATUS.find(x=>x[0]===s)||[s,s||'—','mute'];
-  const TABS=[['overview','Overview'],['users','Users'],['plaid','Plaid & cost'],['sync','Sync health'],['cleanup','Cleanup job'],['bugs','Bug reports'],['beta','Beta']];
+  const TABS=[['overview','Overview'],['users','Users'],['plaid','Plaid & cost'],['sync','Sync health'],['cleanup','Cleanup job'],['inbox','Inbox'],['beta','Beta']];
   const HIST_KEY='ops_history_v1', HIST_MAX=365;
 
   const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
-  let snap={}, history=[], fbFilter='open', session=null, loadErr='', denied=false, loading=false, lastLoadAt=0, cardErr={}, busy={};
+  let snap={}, history=[], fbFilter='open', fbSource='all', session=null, loadErr='', denied=false, loading=false, lastLoadAt=0, cardErr={}, busy={};
   const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
   const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
-  let tab=(location.hash||'').slice(1); if(!TABS.some(t=>t[0]===tab)) tab=lsGet('ops_tab')||'overview';
+  const tabAlias=k=>k==='bugs'?'inbox':k;
+  let tab=tabAlias((location.hash||'').slice(1)); if(!TABS.some(t=>t[0]===tab)) tab=tabAlias(lsGet('ops_tab')||'overview');
   if(!TABS.some(t=>t[0]===tab)) tab='overview';
   try{const h=JSON.parse(lsGet(HIST_KEY)||'[]'); if(Array.isArray(h)) history=h.filter(x=>x&&x.generated_at).slice(-HIST_MAX);}catch(e){history=[];}
 
@@ -455,17 +478,35 @@ body.mopen{overflow:hidden}
   function planPill(x){const p=x.plan;const cls=p==='pro'?'good':p==='trial'?'info':p==='expired'?'bad':'mute';
     let t=esc(ENUM[p]||p||'unknown'); if(p==='trial'&&x.trial_days_remaining!=null) t+=' · '+x.trial_days_remaining+'d left'; return `<span class="pill ${cls}">${t}</span>`;}
   const flagsOf=()=>Array.isArray(snap.webhook_flags)?snap.webhook_flags:(snap.webhook_flags?.items||[]);
+  const BETA_CEILING=10;
+  const srcOf=x=>x.source==='email'?'email':'app';
+  const addrOf=x=>{const raw=String(srcOf(x)==='email'?(x.email_from||x.contact_email||''):(x.contact_email||'')).trim();const m=raw.match(/<([^>]+)>/);return (m?m[1]:raw).trim();};
   const isOpen=x=>!['implemented','rejected'].includes(x.status);
 
   const noteOf=sh=>{const u=(snap.users?.items||[]).find(x=>x.short===sh);return u&&u.invite_note?String(u.invite_note):''};
   const who=sh=>{const n=noteOf(sh);if(!n) return sh;return (n.length>24?n.slice(0,23)+'…':n)+' ('+sh+')'};
+  function testerList(){
+    const inv=(snap.beta_invites?.items||[]).filter(i=>i.redeemed_at);
+    const out=[];
+    (snap.users?.items||[]).forEach(u=>{
+      const e=u.entitlement, src=e&&e.source, iv=inv.find(i=>i.redeemed_by_short===u.short);
+      const isBeta=src==='beta_permanent'||src==='beta_limited';
+      if(!isBeta&&!iv) return;
+      const exp=isBeta&&src==='beta_limited'?dOf(e.expires_at):null;
+      const days=exp?Math.ceil((exp-Date.now())/864e5):null;
+      out.push({u,src:isBeta?src:null,exp,days,name:u.invite_note||(iv&&iv.note)||u.short,active:isBeta&&!(exp&&days<0)});
+    });
+    return out;
+  }
   function attentionRows(){
     const rows=[];
     (snap.plaid?.items||[]).forEach(i=>{ if(i.is_active&&i.item_status&&i.item_status!=='login_repaired') rows.push(['warn',`${inst(i.institution_id)} connection: ${i.item_status.replace(/_/g,' ')}`,`Item ${i.item_id_short} · user ${who(i.user_short)} · ${ago(i.item_status_at)}`,'sync']);});
     (snap.reaper?.recent_rows||[]).filter(x=>x.decision==='error'||x.error).slice(0,5).forEach(x=>rows.push(['bad','Cleanup job problem: '+(human(x.decision)||''),`${fmtDT(x.run_at)} · user ${x.user_short||'—'} · ${x.error||x.reason||''}`,'cleanup']));
     (snap.users?.items||[]).forEach(x=>{ if(x.plan==='trial'&&x.trial_days_remaining!=null&&x.trial_days_remaining<=3) rows.push(['warn',`Trial ends in ${x.trial_days_remaining} day(s)`,`User ${who(x.short)} · ${x.items_active??x.institution_count??0} bank link(s)`,'users']);});
     const fresh=(snap.feedback?.items||[]).filter(x=>x.status==='pending');
-    if(fresh.length) rows.push(['info',`${fresh.length} new bug report(s)`,'Open the Bug reports tab','bugs']);
+    if(fresh.length) rows.push(['info',`${fresh.length} new inbox item(s)`,'Open the Inbox tab','inbox']);
+    const soon=testerList().filter(t=>t.days!=null&&t.days<=7);
+    if(soon.length) rows.push(['warn',`${soon.length} beta tester(s) ending within 7 days`,soon.map(t=>t.name+(t.days<0?' (ended)':' ('+t.days+'d)')).join(', '),'beta']);
     const stale=flagsOf().filter(w=>w.last_webhook_at&&(Date.now()-dOf(w.last_webhook_at))/36e5>48);
     if(stale.length) rows.push(['warn',`${stale.length} sync signal(s) waiting over 2 days`,stale.map(w=>w.item_id_short).join(', '),'sync']);
     return rows;
@@ -483,7 +524,7 @@ body.mopen{overflow:hidden}
       kpi('Users',u.total??'—',`${n0(u.active_last_7d)} active in 7 days`),
       kpi('Active bank links',p.active_items??'—',`${n0(p.inactive_items)} inactive`),
       kpi('Est. Plaid cost / mo',usd(p.est_monthly_cost_usd),'per-Item subscriptions'),
-      kpi('Open bug reports',f.items?open.length:'—',`${n0(f.counts?.pending)} new`),
+      kpi('Open inbox items',f.items?open.length:'—',`${n0(f.counts?.pending)} new`),
       kpi('Cleanup job',human(r.mode_hint)||'—',lastRun?'last run '+ago(lastRun.run_at):'no runs yet')].join('')}</div>
     <section><div class="sechead"><h2>Needs attention</h2></div>${attnHtml(attentionRows())}</section>
     <section><div class="sechead"><h2>Shortcuts</h2><span class="note">Open in a new tab</span></div>
@@ -495,7 +536,7 @@ body.mopen{overflow:hidden}
         <div class="box"><div class="bh"><h3>Active bank links</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.items_active)})))}</div></div>
         <div class="box"><div class="bh"><h3>Est. Plaid cost / month</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.est_monthly_cost_usd)})),{fmt:v=>'$'+v.toFixed(2),color:'var(--violet)'})}</div></div>
         <div class="box"><div class="bh"><h3>Users</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.users_total)})),{color:'var(--teal)'})}</div></div>
-        <div class="box"><div class="bh"><h3>Open bug reports</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.feedback_open)})),{color:'var(--warn)'})}</div></div>
+        <div class="box"><div class="bh"><h3>Open inbox items</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.feedback_open)})),{color:'var(--warn)'})}</div></div>
       </div></section>`;
   };
   P.users=()=>{
@@ -549,26 +590,41 @@ body.mopen{overflow:hidden}
     <section><div class="sechead"><h2>Recent decisions</h2></div>
     ${table(['When','User','Decision','Reason','Note'],(r.recent_rows||[]).map(x=>`<tr><td>${fmtDT(x.run_at)}</td><td class="mono">${esc(x.user_short||'—')}</td><td>${esc(human(x.decision))}</td><td>${esc(human(x.reason)||'')}</td><td class="note">${esc(x.error||'')}</td></tr>`),'No decisions recorded.')}</section>`;
   };
-  P.bugs=()=>{
+  const IC_SRC={app:'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/>',email:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'};
+  const srcBadge=x=>{const s=srcOf(x);return `<span class="srcb ${s}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true">${IC_SRC[s]}</svg>${s==='email'?'Email':'App'}</span>`};
+  const metaLine=x=>[x.app_version,x.os_version,x.device_model].filter(Boolean).join(' · ');
+  const replyHtml=x=>{const a=addrOf(x);if(!a) return '';return `<div class="reply"><span class="addr">${esc(a)}</span><button class="btn" type="button" data-copyaddr="${esc(a)}">Copy</button><a class="btn" href="mailto:${esc(encodeURI(a))}?subject=${encodeURIComponent('Re: BLO VAULT report')}">Reply</a></div>`};
+  P.inbox=()=>{
     const f=snap.feedback||{}, items=f.items||[];
     const weeks=(f.by_week||[]).map(w=>({label:wk(w.week_start),n:w.count}));
-    const list=items.filter(x=>fbFilter==='all'?true:fbFilter==='open'?isOpen(x):x.status===fbFilter);
+    const list=items.filter(x=>(fbFilter==='all'?true:fbFilter==='open'?isOpen(x):x.status===fbFilter)&&(fbSource==='all'||srcOf(x)===fbSource));
     const counts={};items.forEach(x=>{counts[x.status]=(counts[x.status]||0)+1});
     return `<div class="kpis">${[kpi('Open',items.filter(isOpen).length),kpi('New',n0(counts.pending)),kpi('Fixed',n0(counts.implemented)),kpi('Median age (open)',f.median_age_open_days!=null?f.median_age_open_days+' d':'—')].join('')}</div>
     <div class="grid2">
-      <div class="box"><h3>Reports per week</h3><div class="chart">${stackedBars(weeks,[['n','Reports','var(--warn)']],{h:140})}</div></div>
+      <div class="box"><h3>Items per week</h3><div class="chart">${stackedBars(weeks,[['n','Items','var(--warn)']],{h:140})}</div></div>
       <div class="box"><h3>By category</h3>${hbars(Object.entries(f.by_category||{}).map(([k,v])=>({label:k,v:n0(v)})),{color:'var(--warn)'})}</div>
     </div>
-    <section><div class="sechead"><h2>Reports</h2><div class="filters" role="group" aria-label="Filter by status">${[['open','Open'],['all','All'],...STATUS.map(s=>[s[0],s[1]])].map(([k,l])=>`<button class="btn" type="button" data-filter="${k}" aria-pressed="${fbFilter===k}">${esc(l)}</button>`).join('')}</div></div>
-    <div class="fb">${list.length?list.map(x=>{const st=statusMeta(x.status);
-      return `<article class="card"><div class="ctop"><span class="pill ${st[2]}">${esc(st[1])}</span><span class="pill cat">${esc(x.category||'Other')}</span><span class="note">${fmtDT(x.created_at)}${x.user_short?' · user '+esc(x.user_short):''}${x.has_screenshot?' · screenshot attached':''}</span></div><div class="msg">${esc(x.message)}</div>${/^https:\/\//.test(x.screenshot_url||'')?`<button class="shot" type="button" data-shot="${esc(x.id)}" aria-label="Open screenshot full size"><img src="${esc(x.screenshot_url)}" alt="Screenshot attached to this report" loading="lazy"></button><span class="note">Screenshot link expires after about 10 minutes; refresh to renew it.</span>`:''}<div class="seg" role="group" aria-label="Set status">${STATUS.map(s=>`<button class="btn" type="button" data-id="${esc(x.id)}" data-status="${s[0]}" aria-pressed="${x.status===s[0]}"${busy[x.id]?' disabled':''}>${esc(s[1])}</button>`).join('')}</div>${cardErr[x.id]?`<div class="err" role="alert">${esc(cardErr[x.id])}</div>`:''}</article>`}).join(''):`<div class="empty"><span class="eico neutral">${svg('inbox')}</span><p>No reports with this status.</p><p>Reports sent from the app’s Feedback screen appear here.</p></div>`}</div></section>`;
+    <section><div class="sechead"><h2>Inbox</h2></div>
+    <div class="filters" role="group" aria-label="Filter by source">${[['all','All sources'],['app','App'],['email','Email']].map(([k,l])=>`<button class="btn" type="button" data-source="${k}" aria-pressed="${fbSource===k}">${esc(l)}</button>`).join('')}</div>
+    <div class="filters" role="group" aria-label="Filter by status">${[['open','Open'],['all','All'],...STATUS.map(s=>[s[0],s[1]])].map(([k,l])=>`<button class="btn" type="button" data-filter="${k}" aria-pressed="${fbFilter===k}">${esc(l)}</button>`).join('')}</div>
+    <div class="fb">${list.length?list.map(x=>{const st=statusMeta(x.status), em=srcOf(x)==='email', mt=metaLine(x);
+      return `<article class="card"><div class="ctop">${srcBadge(x)}<span class="pill ${st[2]}">${esc(st[1])}</span><span class="pill cat">${esc(x.category||'Other')}</span><span class="note">${fmtDT(x.created_at)}${x.user_short?' · user '+esc(x.user_short):''}${x.has_screenshot?' · screenshot attached':''}</span></div>${em?`<div class="ctitle">${esc(x.email_subject||'(no subject)')}</div>${x.email_from?`<div class="note">From ${esc(x.email_from)}</div>`:''}<div class="msg clamp">${esc(x.message)}</div>`:`<div class="msg">${esc(x.message)}</div>`}${mt?`<div class="meta">${esc(mt)}${x.has_diagnostics?' · diagnostics attached':''}</div>`:''}${x.admin_note?`<div class="anote" title="${esc(x.admin_note)}">Note: ${esc(String(x.admin_note).split('\n')[0])}</div>`:''}${replyHtml(x)}${/^https:\/\//.test(x.screenshot_url||'')?`<button class="shot" type="button" data-shot="${esc(x.id)}" aria-label="Open screenshot full size"><img src="${esc(x.screenshot_url)}" alt="Screenshot attached to this report" loading="lazy"></button><span class="note">Screenshot link expires after about 10 minutes; refresh to renew it.</span>`:''}<div class="cacts"><button class="btn" type="button" data-detail="${esc(x.id)}"${busy['d'+x.id]?' disabled':''}>Details</button></div><div class="seg" role="group" aria-label="Set status">${STATUS.map(s=>`<button class="btn" type="button" data-id="${esc(x.id)}" data-status="${s[0]}" aria-pressed="${x.status===s[0]}"${busy[x.id]?' disabled':''}>${esc(s[1])}</button>`).join('')}</div>${cardErr[x.id]?`<div class="err" role="alert">${esc(cardErr[x.id])}</div>`:''}</article>`}).join(''):`<div class="empty"><span class="eico neutral">${svg('inbox')}</span><p>No items match these filters.</p><p>Reports from the app and mail to info@blovault.com land here. Import mail with <span class="mono">make support-mail-import APPLY=1</span>.</p></div>`}</div></section>`;
   };
   P.beta=()=>{
-    const b=snap.beta_invites||{}, t=b.by_tier||{};
-    return `<div class="sechead"><h2>Invites</h2><button class="btn primary" type="button" data-act="invite">New invite</button></div>
-    <div class="kpis">${[kpi('Unused codes',n0(b.unused)),kpi('Redeemed',n0(b.redeemed)),kpi('Permanent',`${n0(t.permanent?.redeemed)} / ${n0(t.permanent?.issued)}`,'redeemed / issued'),kpi('30-day',`${n0(t.limited?.redeemed)} / ${n0(t.limited?.issued)}`,'redeemed / issued')].join('')}</div>
-    <p class="note">Create a code with New invite. The full code is shown once, right after it is created.</p>
-    ${table(['Code','Tier','For','Created','Redeemed','Actions'],(b.items||[]).map((x,i)=>`<tr><td class="mono">${esc(x.code_masked)}</td><td>${esc(x.tier)}</td><td>${esc(x.note)}</td><td>${fmtDate(x.created_at)}</td><td>${x.redeemed_at?fmtDate(x.redeemed_at)+' · <span class="mono">'+esc(x.redeemed_by_short)+'</span>':'<span class="pill mute">unused</span>'}</td><td>${x.redeemed_at?'':`<button class="btn" type="button" data-inv="${i}" aria-label="Revoke invite ${esc(x.code_masked)}">Revoke</button>`}</td></tr>`),'No invites issued yet.')}`;
+    const b=snap.beta_invites||{}, t=b.by_tier||{}, ts=testerList();
+    const used=ts.filter(x=>x.src).length, unused=n0(b.unused), full=used+unused>=BETA_CEILING;
+    const active7=(snap.users?.items||[]).filter(u=>ts.some(x=>x.u===u)&&dOf(u.last_active_at)&&Date.now()-dOf(u.last_active_at)<7*864e5).length;
+    return `<div class="cta"><button class="btn primary" type="button" data-act="invite"${full?' disabled':''}>New invite</button>${full?`<span class="note">Beta is full: ${used} tester(s) + ${unused} unused invite(s) reach the ceiling of ${BETA_CEILING}. <a href="#beta" data-act="invite-force">Issue anyway</a></span>`:`<span class="note">${BETA_CEILING-used-unused} slot(s) left before the ceiling of ${BETA_CEILING}.</span>`}</div>
+    <div class="kpis">${[kpi('Testers used',`${used} / ${BETA_CEILING}`,'beta access granted'),kpi('Active in 7 days',active7,'testers who opened the app'),kpi('Invites unused',unused,`${n0(b.redeemed)} redeemed`)].join('')}</div>
+    <section><div class="sechead"><h2>Testers</h2><span class="note">${ts.length} total</span></div>
+    <div class="fb">${ts.length?ts.map((x,i)=>{const u=x.u, perm=x.src==='beta_permanent', ended=!x.src||(x.days!=null&&x.days<0);
+      const exp=!x.src?'Access ended':perm?'Permanent':x.exp?(x.days<0?'Ended '+fmtDate(x.exp):'Ends '+fmtDate(x.exp)+' · '+x.days+' day'+(x.days===1?'':'s')+' left'):'No expiry';
+      const cls=ended?'bad':x.days!=null&&x.days<=7?'warn':'';
+      return `<article class="card tester"><div class="trow"><span class="tname">${esc(x.name)}</span><span class="pill ${perm?'good':x.src?'info':'mute'}">${esc(x.src?(perm?'Permanent':'30-day'):'No access')}</span><span class="mono usub">${esc(u.short)}</span></div><div class="tsub ${cls}">${esc(exp)}</div><div class="tsub">Last opened ${esc(ago(u.last_active_at))} · ${u.items_active??u.institution_count??0} bank link(s)</div><div class="cacts"><button class="btn" type="button" data-tx="ext" data-ti="${i}">+30 days</button>${perm?'':`<button class="btn" type="button" data-tx="perm" data-ti="${i}">Make permanent</button>`}${x.src?`<button class="btn" type="button" data-tx="end" data-ti="${i}">End access</button>`:''}</div></article>`}).join(''):`<div class="empty"><span class="eico neutral">${svg('users')}</span><p>No beta testers yet.</p><p>Create an invite to add the first one.</p></div>`}</div></section>
+    <section><div class="sechead"><h2>Invites</h2></div>
+    <div class="kpis">${[kpi('Unused codes',unused),kpi('Redeemed',n0(b.redeemed)),kpi('Permanent',`${n0(t.permanent?.redeemed)} / ${n0(t.permanent?.issued)}`,'redeemed / issued'),kpi('30-day',`${n0(t.limited?.redeemed)} / ${n0(t.limited?.issued)}`,'redeemed / issued')].join('')}</div>
+    <p class="note">The full code is shown once, right after it is created.</p>
+    ${table(['Code','Tier','For','Created','Redeemed','Actions'],(b.items||[]).map((x,i)=>`<tr><td class="mono">${esc(x.code_masked)}</td><td>${esc(x.tier)}</td><td>${esc(x.note)}</td><td>${fmtDate(x.created_at)}</td><td>${x.redeemed_at?fmtDate(x.redeemed_at)+' · <span class="mono">'+esc(x.redeemed_by_short)+'</span>':'<span class="pill mute">unused</span>'}</td><td>${x.redeemed_at?'':`<button class="btn" type="button" data-inv="${i}" aria-label="Revoke invite ${esc(x.code_masked)}">Revoke</button>`}</td></tr>`),'No invites issued yet.')}</section>`;
   };
 
   /* ---------- admin actions: toast, modal, menu ---------- */
@@ -590,7 +646,7 @@ body.mopen{overflow:hidden}
   const mroot=document.createElement('div'); mroot.className='mback'; mroot.hidden=true; document.body.appendChild(mroot);
   let M=null;
   const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
-  const selOf=el=>{if(!el||!el.getAttribute) return '';for(const a of ['data-umenu','data-inv','data-act','data-shot']){if(el.hasAttribute(a)) return '['+a+'="'+el.getAttribute(a)+'"]';}return '';};
+  const selOf=el=>{if(!el||!el.getAttribute) return '';for(const a of ['data-umenu','data-inv','data-act','data-shot','data-detail']){if(el.hasAttribute(a)) return '['+a+'="'+el.getAttribute(a)+'"]';}return '';};
   const isVis=(f,v)=>!f.showIf||f.showIf(v);
   const expected=()=>{const c=M.cfg;return typeof c.confirmText==='function'?String(c.confirmText(M.vals)||''):String(c.confirmText||'')};
   const needsConfirm=()=>M.cfg.confirmText!=null&&(!M.cfg.preview||M.phase==='confirm');
@@ -599,6 +655,7 @@ body.mopen{overflow:hidden}
     const id='mf-'+f.name, v=M.vals[f.name];
     let ctl;
     if(f.type==='select') ctl=`<select id="${id}" data-mf="${f.name}">${f.options.map(([val,l])=>`<option value="${esc(val)}"${val===v?' selected':''}>${esc(l)}</option>`).join('')}</select>`;
+    else if(f.type==='textarea') ctl=`<textarea id="${id}" data-mf="${f.name}" rows="4"${f.max?` maxlength="${f.max}"`:''} spellcheck="true">${esc(v)}</textarea>`;
     else ctl=`<input id="${id}" data-mf="${f.name}" type="${f.type||'text'}" value="${esc(v)}"${f.min!=null?` min="${f.min}" max="${f.max}" inputmode="numeric"`:''} autocomplete="off" autocapitalize="off" spellcheck="false">`;
     return `<div class="field" data-fw="${f.name}"${isVis(f,M.vals)?'':' hidden'}><label for="${id}">${esc(f.label)}</label>${ctl}${f.hint?`<span class="hint">${esc(f.hint)}</span>`:''}</div>`;
   }
@@ -638,7 +695,7 @@ body.mopen{overflow:hidden}
       if(needsConfirm()){const e=expected(); if(!e||M.typed!==e) ok=false;}
       sub.disabled=M.pending||!ok;
     }
-    mroot.querySelectorAll('input,select,button').forEach(el=>{ if(el.id!=='mSubmit') el.disabled=M.pending; });
+    mroot.querySelectorAll('input,select,textarea,button').forEach(el=>{ if(el.id!=='mSubmit') el.disabled=M.pending; });
   }
   function setErr(m){const e=$('mErr'); if(e) e.textContent=m||'';}
   function openModal(cfg,opener){
@@ -837,6 +894,52 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
     const it=(snap.feedback?.items||[]).find(x=>x.id===id); if(!it||!/^https:\/\//.test(it.screenshot_url||'')) return;
     openModal({title:'Screenshot',wide:true,closeOnly:true,html:`<img class="lbimg" src="${esc(it.screenshot_url)}" alt="Screenshot attached to this report"><p class="note">This link expires after about 10 minutes. <a href="${esc(it.screenshot_url)}" target="_blank" rel="noopener">Open in a new tab</a></p>`},btn);
   }
+  function actDetail(id,btn){
+    busy['d'+id]=true; render();
+    api('feedback_detail',{id}).then(d=>{
+      delete busy['d'+id]; render();
+      const li=(snap.feedback?.items||[]).find(x=>x.id===id)||{}, x=Object.assign({},li,d||{}), em=srcOf(x)==='email', mt=metaLine(x), st=statusMeta(x.status);
+      const shot=/^https:\/\//.test(x.screenshot_url||'')?x.screenshot_url:'';
+      const intro=`<div class="ctop">${srcBadge(x)}<span class="pill ${st[2]}">${esc(st[1])}</span><span class="note">${fmtDT(x.created_at)}</span></div>`
+        +(em?`<div class="ctitle">${esc(x.email_subject||'(no subject)')}</div>${x.email_from?`<div class="note">From ${esc(x.email_from)}</div>`:''}`:'')
+        +`<div class="msg" style="white-space:pre-wrap">${esc(x.message)}</div>`+replyHtml(x)
+        +(mt||x.user_short?`<div class="meta">${esc([mt,x.user_short?'user '+x.user_short:''].filter(Boolean).join(' \u00b7 '))}</div>`:'')
+        +(x.diagnostics?`<h3>Diagnostics</h3><pre class="diag" tabindex="0">${esc(x.diagnostics)}</pre>`:'')
+        +(shot?`<a class="shot" href="${esc(shot)}" target="_blank" rel="noopener" aria-label="Open screenshot in a new tab"><img src="${esc(shot)}" alt="Screenshot attached to this report"></a>`:'');
+      const cats=['Problem','Improvement','Other']; if(x.category&&!cats.includes(x.category)) cats.push(x.category);
+      openModal({title:'Inbox item',wide:true,intro,
+        fields:[{name:'category',label:'Category',type:'select',value:x.category||'Other',options:cats.map(c=>[c,c])},{name:'note',label:'Admin note (only you can see this)',type:'textarea',max:4000,value:x.admin_note||''}],
+        submit:'Save',toast:'Saved',
+        run:async v=>{
+          if(v.category!==(x.category||'Other')){await api('set_feedback_category',{id,category:v.category}); if(li) li.category=v.category;}
+          if(v.note!==(x.admin_note||'')){await api('set_feedback_note',{id,note:v.note}); if(li) li.admin_note=v.note||null;}
+          return {ok:true};}},btn);
+    }).catch(err=>{delete busy['d'+id]; render(); toast(errMsg(err));});
+  }
+  async function copyAddr(btn){
+    const a=btn.dataset.copyaddr, el=btn.parentElement.querySelector('.addr'); let ok=false;
+    try{await navigator.clipboard.writeText(a);ok=true;}catch(x){}
+    if(!ok&&el){const r=document.createRange();r.selectNodeContents(el);const sl=getSelection();sl.removeAllRanges();sl.addRange(r);try{ok=document.execCommand('copy')}catch(x){}}
+    toast(ok?'Address copied':'Address selected. Press Ctrl/Cmd+C to copy.');
+  }
+  function actPermanent(x,btn){
+    const u=x.u;
+    openModal({title:'Make permanent',intro:userLine(u)+'<p>Replaces the current beta access with permanent beta access (no expiry).</p>',
+      fields:idFields(u),validate:v=>uidCheck(u,v),submit:'Make permanent',toast:'Access is now permanent',
+      run:v=>api('grant_entitlement',{user_id:uidOf(u,v),source:'beta_permanent'})},btn);
+  }
+  function actEnd(x,btn){
+    const u=x.u;
+    openModal({title:'End access',danger:true,intro:userLine(u)+'<p>Removes the beta access now. The user keeps the account and any paid App Store subscription.</p>',
+      fields:idFields(u),confirmText:v=>(uidOf(u,v)||u.short||'').slice(0,8),validate:v=>uidCheck(u,v),submit:'End access',toast:'Access ended',
+      run:v=>api('revoke_entitlement',{user_id:uidOf(u,v)})},btn);
+  }
+  async function quickExtend(x,btn){
+    const u=x.u; if(!(u.user_id||u.id)){actExtend(u,btn);return;}
+    btn.disabled=true;
+    try{const r=await api('extend_entitlement',{user_id:uidOf(u),days:30}); toast(r&&r.expires_at?'Extended until '+fmtDate(r.expires_at):'Extended by 30 days'); load();}
+    catch(err){toast(errMsg(err)); btn.disabled=false;}
+  }
   const MENU={grant:actGrant,extend:actExtend,revoke:actRevoke,reassign:actReassign,delete:actDelete};
 
   /* ---------- shell ---------- */
@@ -848,7 +951,7 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
   function renderTabs(){
     const open=(snap.feedback?.items||[]).filter(isOpen).length, attn=attentionRows().length;
     const nav=$('tabs'), prev=nav.scrollLeft;
-    nav.innerHTML=TABS.map(([k,l])=>{const c=k==='bugs'&&open?open:k==='overview'&&attn?attn:'';return `<button type="button" role="tab" id="tab-${k}" aria-controls="panel" aria-selected="${tab===k}" tabindex="${tab===k?0:-1}" data-tab="${k}">${esc(l)}${c?` <span class="count">${c}</span>`:''}</button>`}).join('');
+    nav.innerHTML=TABS.map(([k,l])=>{const c=k==='inbox'&&open?open:k==='overview'&&attn?attn:'';return `<button type="button" role="tab" id="tab-${k}" aria-controls="panel" aria-selected="${tab===k}" tabindex="${tab===k?0:-1}" data-tab="${k}">${esc(l)}${c?` <span class="count">${c}</span>`:''}</button>`}).join('');
     nav.scrollLeft=prev;
     const sel=$('tab-'+tab);
     if(sel){const l=sel.offsetLeft, r=l+sel.offsetWidth; if(l<nav.scrollLeft+16) nav.scrollLeft=Math.max(0,l-16); else if(r>nav.scrollLeft+nav.clientWidth-16) nav.scrollLeft=r-nav.clientWidth+16;}
@@ -936,13 +1039,17 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
     if(um){ if(menu&&menu.btn===um) closeMenu(true); else openMenu(um); return; }
     if(menu&&!menu.el.contains(e.target)) closeMenu();
     const ac=e.target.closest('[data-act]');
-    if(ac&&!ac.disabled){ const k=ac.dataset.act; if(k==='invite') actInvite(ac); else if(k==='mode') actMode(ac); else if(k==='run') actRun(ac); return; }
+    if(ac&&!ac.disabled){ const k=ac.dataset.act; if(k==='invite'||k==='invite-force'){ if(k==='invite-force') e.preventDefault(); actInvite(ac);} else if(k==='mode') actMode(ac); else if(k==='run') actRun(ac); return; }
     const iv=e.target.closest('[data-inv]');
     if(iv){ const x=(snap.beta_invites?.items||[])[+iv.dataset.inv]; if(x) actRevokeInvite(x,iv); return; }
+    const dt=e.target.closest('[data-detail]'); if(dt){ if(!dt.disabled) actDetail(dt.dataset.detail,dt); return; }
+    const ca=e.target.closest('[data-copyaddr]'); if(ca){ copyAddr(ca); return; }
+    const tx=e.target.closest('[data-tx]'); if(tx){ const x=testerList()[+tx.dataset.ti]; if(x){ const k=tx.dataset.tx; if(k==='ext') quickExtend(x,tx); else if(k==='perm') actPermanent(x,tx); else actEnd(x,tx);} return; }
     const sh=e.target.closest('[data-shot]');
     if(sh){ actShot(sh.dataset.shot,sh); return; }
     const t=e.target.closest('[data-tab]'); if(t){go(t.dataset.tab);return;}
     const g=e.target.closest('[data-goto]'); if(g){go(g.dataset.goto);return;}
+    const sr=e.target.closest('[data-source]'); if(sr){fbSource=sr.dataset.source;render();const ns=document.querySelector('[data-source="'+fbSource+'"]'); if(ns) ns.focus({preventScroll:true});return;}
     const f=e.target.closest('[data-filter]'); if(f){fbFilter=f.dataset.filter;render();const nf=document.querySelector('[data-filter="'+fbFilter+'"]'); if(nf) nf.focus({preventScroll:true});return;}
     if(e.target.closest('[data-retry]')){load();return;}
     if(e.target.closest('[data-signout]')){sb.auth.signOut();return;}
@@ -969,7 +1076,7 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
     }catch(err){$('loginErr').textContent='Network error. Try again.';}
     btn.disabled=false; btn.textContent='Sign in';
   });
-  window.addEventListener('hashchange',()=>{const k=(location.hash||'').slice(1); if(TABS.some(t=>t[0]===k)&&k!==tab){tab=k;lsSet('ops_tab',k);render();}});
+  window.addEventListener('hashchange',()=>{const k=tabAlias((location.hash||'').slice(1)); if(TABS.some(t=>t[0]===k)&&k!==tab){tab=k;lsSet('ops_tab',k);render();}});
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&session&&Date.now()-lastLoadAt>60000) load(); });
 
   sb.auth.onAuthStateChange((event,s)=>{
