@@ -564,7 +564,7 @@ body.mopen{overflow:hidden}
       <div class="box wide"><h3>Sign-ups per week</h3><div class="chart">${stackedBars(weeks,[['n','New accounts','var(--accent)']])}</div></div>
     </div>
     ${u.trial_ends_note?`<p class="note">${esc(u.trial_ends_note)}</p>`:''}
-    ${table(['User','Plan','Access','>Banks','Trial ends','Last opened','Joined','Actions'],(u.items||[]).map((x,i)=>`<tr><td>${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${x.items_active??x.institution_count??'—'}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn" type="button" data-umenu="${i}" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for user ${esc(x.short)}">Actions${svg('chev')}</button></td></tr>`),'No users in this snapshot.')}`;
+    ${table(['User','Plan','Access','>Banks','Trial ends','Last opened','Joined','Actions'],(u.items||[]).map((x,i)=>`<tr><td>${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}${x.feature_preview?' <span class="pill info">Preview</span>':''}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${x.items_active??x.institution_count??'—'}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn" type="button" data-umenu="${i}" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for user ${esc(x.short)}">Actions${svg('chev')}</button></td></tr>`),'No users in this snapshot.')}`;
   };
   P.plaid=()=>{
     const p=snap.plaid||{}, bp=p.by_product||{}, cp=p.cost_by_product||{};
@@ -629,7 +629,7 @@ body.mopen{overflow:hidden}
   const flagsCard=()=>{
     const fl=Array.isArray(snap.feature_flags)?snap.feature_flags:null;
     const body=fl&&fl.length?fl.map(f=>`<div class="flag"><div class="ftxt"><span class="fname">${esc(f.note||f.key)}</span><span class="fsub">${f.updated_at?'Changed '+esc(ago(f.updated_at)):'Never changed'}</span></div><button class="sw" type="button" role="switch" aria-checked="${f.enabled===true}" aria-label="${esc(f.note||f.key)}" data-flag="${esc(f.key)}"${flagBusy[f.key]?' disabled':''}><span class="swl">${f.enabled?'On':'Off'}</span></button></div>`).join(''):`<p class="note">${snap.feature_flags_error?'Could not load feature flags: '+esc(snap.feature_flags_error):'Feature flags are not available yet. Apply the feature_flags migration.'}</p>`;
-    return `<section><div class="sechead"><h2>Features for testers</h2></div><div class="card">${body}<p class="note">Off = hidden for testers. You (admin) always see every feature.</p></div></section>`;
+    return `<section><div class="sechead"><h2>Features for testers</h2></div><div class="card">${body}<p class="note">Off = hidden for testers. You (admin) always see every feature. Turn on &#39;See hidden features&#39; for a user (e.g. your phone) to preview.</p></div></section>`;
   };
   async function toggleFlag(key,btn){
     const f=(snap.feature_flags||[]).find(x=>x.key===key); if(!f||flagBusy[key]) return;
@@ -807,7 +807,7 @@ body.mopen{overflow:hidden}
   function openMenu(btn){
     closeMenu();
     const x=(snap.users?.items||[])[+btn.dataset.umenu]; if(!x) return;
-    const items=[['grant','Grant access'],['extend','Extend access'],['revoke','Revoke access','bad']];
+    const items=[['grant','Grant access'],['extend','Extend access'],['revoke','Revoke access','bad'],['preview',x.feature_preview?'Stop seeing hidden features':'See hidden features']];
     if(!isAdminRow(x)) items.push(['sep'],['reassign','Move data to another user'],['delete','Delete user','bad']);
     const el=document.createElement('div'); el.className='menu'; el.setAttribute('role','menu'); el.setAttribute('aria-label','Actions for user '+x.short);
     el.innerHTML=items.map(i=>i[0]==='sep'?'<hr role="separator">':`<button type="button" role="menuitem" data-mi="${i[0]}"${i[2]?` class="${i[2]}"`:''}>${esc(i[1])}</button>`).join('');
@@ -857,6 +857,13 @@ body.mopen{overflow:hidden}
     openModal({title:'Revoke access',intro:userLine(x)+'<p>Removes the beta or owner access. The user keeps the account and any paid App Store subscription.</p>',
       fields:idFields(x),validate:v=>uidCheck(x,v),danger:true,submit:'Revoke access',toast:'Access revoked',
       run:v=>api('revoke_entitlement',{user_id:uidOf(x,v)})},btn);
+  }
+  function actPreview(x,btn){
+    const on=!x.feature_preview;
+    openModal({title:on?'See hidden features':'Stop seeing hidden features',
+      intro:userLine(x)+(on?'<p>This user will see every feature, including ones turned off for testers. It does not give any admin access.</p>':'<p>This user will only see the features that are turned on for testers.</p>'),
+      fields:idFields(x),validate:v=>uidCheck(x,v),submit:on?'Turn on':'Turn off',toast:on?'Hidden features are now visible to this user':'This user no longer sees hidden features',
+      run:v=>api(on?'add_feature_preview':'remove_feature_preview',{user_id:uidOf(x,v)})},btn);
   }
   function actDelete(x,btn){
     openModal({title:'Delete user',danger:true,
@@ -971,7 +978,7 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
     try{const r=await api('extend_entitlement',{user_id:uidOf(u),days:30}); toast(r&&r.expires_at?'Extended until '+fmtDate(r.expires_at):'Extended by 30 days'); load();}
     catch(err){toast(errMsg(err)); btn.disabled=false;}
   }
-  const MENU={grant:actGrant,extend:actExtend,revoke:actRevoke,reassign:actReassign,delete:actDelete};
+  const MENU={grant:actGrant,extend:actExtend,revoke:actRevoke,reassign:actReassign,preview:actPreview,delete:actDelete};
 
   /* ---------- shell ---------- */
   function updateFade(){
