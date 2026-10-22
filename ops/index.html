@@ -239,6 +239,21 @@ td.note{font-size:13px}
 .cta{display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap}
 .cta .btn.primary{min-height:48px;padding-inline:22px;font-size:15px}
 
+.flag{display:flex;align-items:center;gap:var(--s3);justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
+.flag:first-of-type{border-top:0}
+.flag .ftxt{min-width:0;display:flex;flex-direction:column;gap:2px}
+.flag .fname{font-weight:650;overflow-wrap:anywhere}
+.flag .fsub{font-size:12.5px;color:var(--fg3)}
+.sw{flex:0 0 auto;position:relative;width:64px;min-height:44px;border:0;background:transparent;cursor:pointer;padding:0}
+.sw::before{content:"";position:absolute;left:0;top:50%;width:64px;height:30px;margin-top:-15px;border-radius:999px;background:var(--line2);transition:background .15s}
+.sw::after{content:"";position:absolute;left:3px;top:50%;width:24px;height:24px;margin-top:-12px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:transform .15s}
+.sw[aria-checked="true"]::before{background:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(34px)}
+.sw .swl{position:absolute;top:50%;margin-top:-8px;font-size:11px;line-height:16px;font-weight:700;color:var(--fg2);right:9px;z-index:1;pointer-events:none}
+.sw[aria-checked="true"] .swl{right:auto;left:9px;color:var(--on-accent)}
+.sw:disabled{opacity:.55;cursor:default}
+.sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:999px}
+
 /* buttons */
 .btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line2);background:var(--surface);color:var(--fg);padding:0 14px;border-radius:var(--r-md);cursor:pointer;min-height:38px;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--sh1);white-space:nowrap}
 @media (pointer:coarse){.btn{min-height:44px}}
@@ -610,12 +625,28 @@ body.mopen{overflow:hidden}
     <div class="fb">${list.length?list.map(x=>{const st=statusMeta(x.status), em=srcOf(x)==='email', mt=metaLine(x);
       return `<article class="card"><div class="ctop">${srcBadge(x)}<span class="pill ${st[2]}">${esc(st[1])}</span><span class="pill cat">${esc(x.category||'Other')}</span><span class="note">${fmtDT(x.created_at)}${x.user_short?' · user '+esc(x.user_short):''}${x.has_screenshot?' · screenshot attached':''}</span></div>${em?`<div class="ctitle">${esc(x.email_subject||'(no subject)')}</div>${x.email_from?`<div class="note">From ${esc(x.email_from)}</div>`:''}<div class="msg clamp">${esc(x.message)}</div>`:`<div class="msg">${esc(x.message)}</div>`}${mt?`<div class="meta">${esc(mt)}${x.has_diagnostics?' · diagnostics attached':''}</div>`:''}${x.admin_note?`<div class="anote" title="${esc(x.admin_note)}">Note: ${esc(String(x.admin_note).split('\n')[0])}</div>`:''}${replyHtml(x)}${/^https:\/\//.test(x.screenshot_url||'')?`<button class="shot" type="button" data-shot="${esc(x.id)}" aria-label="Open screenshot full size"><img src="${esc(x.screenshot_url)}" alt="Screenshot attached to this report" loading="lazy"></button><span class="note">Screenshot link expires after about 10 minutes; refresh to renew it.</span>`:''}<div class="cacts"><button class="btn" type="button" data-detail="${esc(x.id)}"${busy['d'+x.id]?' disabled':''}>Details</button></div><div class="seg" role="group" aria-label="Set status">${STATUS.map(s=>`<button class="btn" type="button" data-id="${esc(x.id)}" data-status="${s[0]}" aria-pressed="${x.status===s[0]}"${busy[x.id]?' disabled':''}>${esc(s[1])}</button>`).join('')}</div>${cardErr[x.id]?`<div class="err" role="alert">${esc(cardErr[x.id])}</div>`:''}</article>`}).join(''):`<div class="empty"><span class="eico neutral">${svg('inbox')}</span><p>No items match these filters.</p><p>Reports from the app and mail to info@blovault.com land here. Import mail with <span class="mono">make support-mail-import APPLY=1</span>.</p></div>`}</div></section>`;
   };
+  const flagBusy={};
+  const flagsCard=()=>{
+    const fl=Array.isArray(snap.feature_flags)?snap.feature_flags:null;
+    const body=fl&&fl.length?fl.map(f=>`<div class="flag"><div class="ftxt"><span class="fname">${esc(f.note||f.key)}</span><span class="fsub">${f.updated_at?'Changed '+esc(ago(f.updated_at)):'Never changed'}</span></div><button class="sw" type="button" role="switch" aria-checked="${f.enabled===true}" aria-label="${esc(f.note||f.key)}" data-flag="${esc(f.key)}"${flagBusy[f.key]?' disabled':''}><span class="swl">${f.enabled?'On':'Off'}</span></button></div>`).join(''):`<p class="note">${snap.feature_flags_error?'Could not load feature flags: '+esc(snap.feature_flags_error):'Feature flags are not available yet. Apply the feature_flags migration.'}</p>`;
+    return `<section><div class="sechead"><h2>Features for testers</h2></div><div class="card">${body}<p class="note">Off = hidden for testers. You (admin) always see every feature.</p></div></section>`;
+  };
+  async function toggleFlag(key,btn){
+    const f=(snap.feature_flags||[]).find(x=>x.key===key); if(!f||flagBusy[key]) return;
+    const next=!(f.enabled===true); flagBusy[key]=true; btn.disabled=true;
+    try{
+      await api('set_feature_flag',{key,enabled:next});
+      toast((f.note||key)+(next?' is now on for testers':' is now hidden for testers'));
+      delete flagBusy[key]; await load();
+    }catch(err){ delete flagBusy[key]; toast('Could not save: '+(err instanceof TypeError?'network error':err.message)); render(); }
+  }
   P.beta=()=>{
     const b=snap.beta_invites||{}, t=b.by_tier||{}, ts=testerList();
     const used=ts.filter(x=>x.src).length, unused=n0(b.unused), full=used+unused>=BETA_CEILING;
     const active7=(snap.users?.items||[]).filter(u=>ts.some(x=>x.u===u)&&dOf(u.last_active_at)&&Date.now()-dOf(u.last_active_at)<7*864e5).length;
     return `<div class="cta"><button class="btn primary" type="button" data-act="invite"${full?' disabled':''}>New invite</button>${full?`<span class="note">Beta is full: ${used} tester(s) + ${unused} unused invite(s) reach the ceiling of ${BETA_CEILING}. <a href="#beta" data-act="invite-force">Issue anyway</a></span>`:`<span class="note">${BETA_CEILING-used-unused} slot(s) left before the ceiling of ${BETA_CEILING}.</span>`}</div>
     <div class="kpis">${[kpi('Testers used',`${used} / ${BETA_CEILING}`,'beta access granted'),kpi('Active in 7 days',active7,'testers who opened the app'),kpi('Invites unused',unused,`${n0(b.redeemed)} redeemed`)].join('')}</div>
+    ${flagsCard()}
     <section><div class="sechead"><h2>Testers</h2><span class="note">${ts.length} total</span></div>
     <div class="fb">${ts.length?ts.map((x,i)=>{const u=x.u, perm=x.src==='beta_permanent', ended=!x.src||(x.days!=null&&x.days<0);
       const exp=!x.src?'Access ended':perm?'Permanent':x.exp?(x.days<0?'Ended '+fmtDate(x.exp):'Ends '+fmtDate(x.exp)+' · '+x.days+' day'+(x.days===1?'':'s')+' left'):'No expiry';
@@ -1040,6 +1071,7 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
     if(menu&&!menu.el.contains(e.target)) closeMenu();
     const ac=e.target.closest('[data-act]');
     if(ac&&!ac.disabled){ const k=ac.dataset.act; if(k==='invite'||k==='invite-force'){ if(k==='invite-force') e.preventDefault(); actInvite(ac);} else if(k==='mode') actMode(ac); else if(k==='run') actRun(ac); return; }
+    const fg=e.target.closest('[data-flag]'); if(fg){ if(!fg.disabled) toggleFlag(fg.dataset.flag,fg); return; }
     const iv=e.target.closest('[data-inv]');
     if(iv){ const x=(snap.beta_invites?.items||[])[+iv.dataset.inv]; if(x) actRevokeInvite(x,iv); return; }
     const dt=e.target.closest('[data-detail]'); if(dt){ if(!dt.disabled) actDetail(dt.dataset.detail,dt); return; }
