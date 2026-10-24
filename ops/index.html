@@ -435,7 +435,7 @@ body.mopen{overflow:hidden}
   };
   const lnk=(k,label)=>`<a href="${LINKS[k][1]}" target="_blank" rel="noopener">${esc(label||LINKS[k][0])}</a>`;
   const svg=(n,cls='i')=>`<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
-  const iconFor=l=>/cost|est\./i.test(l)?'dollar':/bug|open|^new$|fixed/i.test(l)?'bug':/link|items?$/i.test(l)?'link':/age/i.test(l)?'clock':/mode|run|error/i.test(l)?'shield':/code|redeem|permanent|30-day/i.test(l)?'ticket':/user|total|active|trial|pro/i.test(l)?'users':'pulse';
+  const iconFor=l=>/cost|est\./i.test(l)?'dollar':/bug|open|^new$|fixed/i.test(l)?'bug':/link|items?$|billed/i.test(l)?'link':/age/i.test(l)?'clock':/mode|run|error/i.test(l)?'shield':/code|redeem|permanent|30-day/i.test(l)?'ticket':/user|total|active|trial|pro/i.test(l)?'users':'pulse';
 
   /* ---------- charts (inline SVG, theme tokens) ---------- */
   let gid=0;
@@ -486,7 +486,8 @@ body.mopen{overflow:hidden}
   const skelBox='<div class="box sk"><span class="skl w40"></span><span class="skl block"></span></div>';
   const skeleton=()=>`<div class="sr" role="status">Loading the latest snapshot…</div><div class="panel" aria-hidden="true"><div class="kpis">${skelKpi.repeat(5)}</div><div class="grid2">${skelBox.repeat(2)}</div></div>`;
   function itemState(i){
-    if(!i.is_active) return '<span class="pill mute">inactive</span>';
+    if(i.billing_state==='billed'||(!i.is_active&&i.billing_state==='billed')) return '<span class="pill warn">billed this month</span>';
+    if(!i.is_active) return '<span class="pill mute">'+(i.billing_state==='parked'?'parked':'inactive')+'</span>';
     const m={pending_disconnect:['Disconnects soon','warn'],pending_expiration:['Consent expiring','warn'],permission_revoked:['Access revoked','bad'],new_accounts_available:['New accounts','info'],login_repaired:['Login repaired','good']}[i.item_status];
     return m?`<span class="pill ${m[1]}">${m[0]}</span>`:'<span class="pill good">healthy</span>';
   }
@@ -537,8 +538,8 @@ body.mopen{overflow:hidden}
     const H=history.map(h=>({label:fmtDate(h.generated_at),...h}));
     return `<div class="kpis">${[
       kpi('Users',u.total??'—',`${n0(u.active_last_7d)} active in 7 days`),
-      kpi('Active bank links',p.active_items??'—',`${n0(p.inactive_items)} inactive`),
-      kpi('Est. Plaid cost / mo',usd(p.est_monthly_cost_usd),'per-Item subscriptions'),
+      kpi('Billed this month',p.billed_this_month??p.active_items??'—',`${n0(p.live_items??p.active_items)} live now`),
+      kpi('Est. Plaid cost / mo',usd(p.est_monthly_cost_usd),'subscription · this UTC month'),
       kpi('Open inbox items',f.items?open.length:'—',`${n0(f.counts?.pending)} new`),
       kpi('Cleanup job',human(r.mode_hint)||'—',lastRun?'last run '+ago(lastRun.run_at):'no runs yet')].join('')}</div>
     <section><div class="sechead"><h2>Needs attention</h2></div>${attnHtml(attentionRows())}</section>
@@ -548,7 +549,7 @@ body.mopen{overflow:hidden}
       ${table(['When','Action','Summary'],(Array.isArray(snap.audit)?snap.audit:[]).map(a=>`<tr><td>${esc(fmtDT(a.created_at))}</td><td>${esc(human(a.action))}</td><td class="note">${esc(a.summary||a.target||'')}</td></tr>`),'No admin actions recorded yet.')}</section>
     <section><div class="sechead"><h2>Trends</h2><span class="note">Trend from this device's visits</span></div>
       <div class="grid2 g22">
-        <div class="box"><div class="bh"><h3>Active bank links</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.items_active)})))}</div></div>
+        <div class="box"><div class="bh"><h3>Billed bank links this month</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.items_billed??h.items_active)})))}</div></div>
         <div class="box"><div class="bh"><h3>Est. Plaid cost / month</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.est_monthly_cost_usd)})),{fmt:v=>'$'+v.toFixed(2),color:'var(--violet)'})}</div></div>
         <div class="box"><div class="bh"><h3>Users</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.users_total)})),{color:'var(--teal)'})}</div></div>
         <div class="box"><div class="bh"><h3>Open inbox items</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.feedback_open)})),{color:'var(--warn)'})}</div></div>
@@ -564,12 +565,12 @@ body.mopen{overflow:hidden}
       <div class="box wide"><h3>Sign-ups per week</h3><div class="chart">${stackedBars(weeks,[['n','New accounts','var(--accent)']])}</div></div>
     </div>
     ${u.trial_ends_note?`<p class="note">${esc(u.trial_ends_note)}</p>`:''}
-    ${table(['User','Plan','Access','>Banks','Trial ends','Last opened','Joined','Actions'],(u.items||[]).map((x,i)=>`<tr><td>${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}${x.feature_preview?' <span class="pill info">Preview</span>':''}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${x.items_active??x.institution_count??'—'}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn" type="button" data-umenu="${i}" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for user ${esc(x.short)}">Actions${svg('chev')}</button></td></tr>`),'No users in this snapshot.')}`;
+    ${table(['User','Plan','Access','>Billed / live','Trial ends','Last opened','Joined','Actions'],(u.items||[]).map((x,i)=>`<tr><td>${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}${x.feature_preview?' <span class="pill info">Preview</span>':''}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${n0(x.items_billed??x.items_active)} / ${n0(x.items_active??0)}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn" type="button" data-umenu="${i}" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for user ${esc(x.short)}">Actions${svg('chev')}</button></td></tr>`),'No users in this snapshot.')}`;
   };
   P.plaid=()=>{
     const p=snap.plaid||{}, bp=p.by_product||{}, cp=p.cost_by_product||{};
     const insts=(p.by_institution_named||Object.entries(p.by_institution||{}).map(([id,n])=>({institution_id:id,name:inst(id),active:n}))).map(x=>({label:x.name||inst(x.institution_id),v:n0(x.active)}));
-    return `<div class="kpis">${[kpi('Active links',p.active_items??'—'),kpi('Transactions Items',n0(bp.transactions),usd(cp.transactions)+' / mo'),kpi('Investments Items',n0(bp.investments),usd(cp.investments)+' / mo'),kpi('Est. total / mo',usd(p.est_monthly_cost_usd))].join('')}</div>
+    return `<div class="kpis">${[kpi('Billed this month',p.billed_this_month??p.active_items??'—',`${n0(p.live_items??p.active_items)} live now`),kpi('Transactions Items',n0(bp.transactions),usd(cp.transactions)+' / mo'),kpi('Investments Items',n0(bp.investments),usd(cp.investments)+' / mo'),kpi('Est. total / mo',usd(p.est_monthly_cost_usd))].join('')}</div>
     <p class="note">${esc(p.cost_basis_note||'')}</p>
     <p class="note">Item details: ${lnk('plaidDebugger')} (search for the short Item id from the table below) · ${lnk('plaidLogs')} · ${lnk('plaidSupport')} · ${lnk('plaidBilling')}</p>
     <div class="grid2">
@@ -1028,7 +1029,7 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
     const g=snap.general||{}; if(!g.generated_at) return;
     const hourKey=new Date().toISOString().slice(0,13);
     const pt={generated_at:g.generated_at,hour:hourKey,
-      items_active:n0(snap.plaid?.active_items),est_monthly_cost_usd:n0(snap.plaid?.est_monthly_cost_usd),
+      items_active:n0(snap.plaid?.active_items),items_billed:n0(snap.plaid?.billed_this_month??snap.plaid?.active_items),est_monthly_cost_usd:n0(snap.plaid?.est_monthly_cost_usd),
       users_total:n0(snap.users?.total),feedback_open:(snap.feedback?.items||[]).filter(isOpen).length};
     const last=history[history.length-1];
     if(last&&last.hour===hourKey) history[history.length-1]=pt; else history.push(pt);
