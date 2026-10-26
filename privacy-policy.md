@@ -1,6 +1,6 @@
 # BLO VAULT Privacy Policy
 
-**Last Updated:** October 25, 2026
+**Last Updated:** October 26, 2026
 
 BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong). We designed the App so that sensitive financial details stay on your device whenever possible.
 
@@ -13,7 +13,7 @@ BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Priv
 ## At a glance
 
 - Plaid: you connect banks through Plaid; we act only as needed to access and refresh data you authorize. Transaction and balance data used in the App are stored primarily on your device in an encrypted database.
-- No central copy of your raw transaction history: we do not store, use, or possess your full raw financial ledger on our servers.
+- No readable copy of your transaction history: we do not store, use, or possess your financial ledger in readable form on our servers. If you set up a recovery key, an encrypted backup of your vault is stored on our servers as ciphertext only (see 5.2); BLO VAULT cannot decrypt it.
 - Supabase: we use it as a secure proxy; encrypted Plaid access tokens and opaque link metadata (Plaid item/account ids) are stored there — not human-readable account names or balances. If you send in-app feedback (text and optional screenshot), that content is also stored on Supabase for review and product improvement.
 - AI: optional assistant features run an on-device language model (Cactus SDK). We do not send your financial ledger to cloud LLM providers for inference.
 - Subscriptions: Apple, Google, and/or RevenueCat process payments under their policies.
@@ -21,6 +21,7 @@ BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Priv
 - Diagnostics: if enabled, Sentry may receive crash/performance data with client-side scrubbing of identifiable user fields.
 - You can wipe local data with Panic Delete in Settings and disconnect Plaid items as described below.
 - Optional iCloud backup (iOS Pro): encrypted vault copy in your iCloud Drive — we cannot read it.
+- Optional encrypted backup with a recovery key: your vault is encrypted on your device with a key only you hold, and only the ciphertext is stored on our servers — we cannot read it.
 
 ---
 
@@ -69,6 +70,10 @@ Each provider processes data under its own terms and privacy notices.
 
 If you enable iCloud backup, the App stores an encrypted copy of your local vault (database + settings + vault key material needed to open it) in your personal iCloud Drive under your Apple ID. The backup is encrypted on your device before upload; we do not hold the decryption key and cannot read your backup on our servers. iCloud storage is governed by Apple’s iCloud Terms and your device iCloud settings. Automatic backup (up to once per day) is available for Pro subscribers when iCloud is available.
 
+### 5.2 Encrypted backup with a recovery key
+
+If you set up a recovery key in Settings → Data & backup, the App creates an encrypted backup of your vault and uploads it to our server (Supabase). The backup contains your local database, the key material needed to open it, and a small set of App settings (for example cash flow planning settings such as card statement and payment due days). It does not contain your sign-in session or the recovery key. The backup is encrypted on your device (AES-256-GCM) with a key derived from a random recovery key that is generated on your device and shown to you once as a recovery code. The recovery key never leaves your device in readable form; we store only the ciphertext, a non-secret short identifier of the key, the backup size and the time of the backup. BLO VAULT cannot read, search or use the backup, and cannot recover the recovery code: if you lose both the code and the device copy of the key, the backup cannot be restored by anyone. The App uploads a new backup after setup, periodically while you use the App, and when you tap "Back up now". Only the most recent backup is kept (one per account). With the same account and your recovery code you can restore the backup on a new phone or after a reset. Replacing the recovery key re-encrypts the backup with the new key.
+
 ## 6. Subscription and purchase data
 
 Purchases are processed by Apple, Google, and/or RevenueCat. They may collect billing and device identifiers under their policies. We share your pseudonymous Supabase user identifier with RevenueCat as the subscriber identifier, and we receive entitlement information (for example, Pro vs Free) to enforce plan limits such as the number of linked accounts and to decide when bank connections are removed.
@@ -84,7 +89,8 @@ Where the GDPR, UK GDPR, or similar laws apply, we rely on contract performance,
 ## 9. Data retention and deletion
 
 - On-device data remains until you delete it (Panic Delete or uninstall). Panic Delete and "Delete account & data" erase it on the device immediately.
-- Bank connections: when your free trial (30 days from account creation), subscription, or beta access ends, we remove your connections at Plaid, which ends our access to those accounts. When you use Panic Delete or "Delete account & data", your bank connections stay paused and we remove them at Plaid by the last day of the current calendar month, because Plaid bills each connection per calendar month; we delete your account at the same time. Signing back in with the same account before then restores the connections without linking again, when a recovery-key copy exists. A copy of the connection credentials may be kept only in a form encrypted with your own recovery key, which BLO VAULT cannot read; without it, connections cannot be restored and are removed by the last day of the month. Uninstalling the App does not by itself disconnect your banks. To disconnect a bank right away, remove it in the App. For complimentary (permanent) beta access, we also remove your connections after 90 days without you opening the App; the beta access itself continues and you can link your accounts again.
+- Bank connections: when your free trial (30 days from account creation), subscription, or beta access ends, we remove your connections at Plaid, which ends our access to those accounts. When you use Panic Delete or "Delete account & data", your bank connections stay paused and we remove them at Plaid by the last day of the current calendar month, because Plaid bills each connection per calendar month; we delete your account at the same time. Signing back in with the same account before then restores the connections without linking again, when a recovery-key copy exists. If you have set up the encrypted backup (5.2), Panic Delete does not delete it at once: it is kept until that same month-end date so your data and connections can be restored together with your recovery code, and it is deleted with your account on that date. A copy of the connection credentials may be kept only in a form encrypted with your own recovery key, which BLO VAULT cannot read; without it, connections cannot be restored and are removed by the last day of the month. Uninstalling the App does not by itself disconnect your banks. To disconnect a bank right away, remove it in the App. For complimentary (permanent) beta access, we also remove your connections after 90 days without you opening the App; the beta access itself continues and you can link your accounts again.
+- Encrypted backup (5.2): kept while your account exists and replaced by each new backup; deleted when your account is deleted (for Panic Delete and "Delete account & data", by the last day of the calendar month as described above).
 - Encrypted tokens and related opaque link metadata on Supabase remain until you remove linked items, revoke access through Plaid or the App where available, or we delete them in connection with support or closure processes. We do not retain readable account names or balances on our servers.
 - Feedback records and attachments on Supabase are deleted when you use "Delete account & data" in the App. Otherwise they are retained for as long as needed to operate support and improve the App unless we delete them earlier or you ask us to delete them where applicable law requires.
 - Sentry data is retained per Sentry project settings.
