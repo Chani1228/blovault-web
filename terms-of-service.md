@@ -1,6 +1,6 @@
 # BLO VAULT Terms of Service
 
-**Last Updated:** October 14, 2026
+**Last Updated:** October 25, 2026
 
 **In-app:** Settings → Data & Privacy → Terms of Service.
 
@@ -29,7 +29,7 @@ Paid features may be offered through in-app purchase. Payments are processed by 
 
 ### 4.1 Free trial, plans, and limits
 
-New users get a 30-day free trial that starts when your pseudonymous account is created. During the trial you may link up to 3 institutions. When the trial ends without an active subscription, syncing stops and we remove your bank connections at Plaid; data already on your device stays until you delete it, and you can link again after subscribing. When a subscription or beta access ends, the same applies. To control costs and prevent abuse, each account may hold at most 10 bank connections. For complimentary (permanent) beta access, we remove your bank connections after 90 days without you opening the App; the beta access itself continues and you can link again. Beta access is by invitation, may be time-limited, and may be changed or ended at our discretion.
+New users get a 30-day free trial that starts when your pseudonymous account is created. During the trial you may link up to 3 institutions. When the trial ends without an active subscription, syncing stops and we remove your bank connections at Plaid; data already on your device stays until you delete it, and you can link again after subscribing. When a subscription or beta access ends, the same applies. To control costs and prevent abuse, each account may hold at most 10 bank connections. If you use Panic Delete or "Delete account & data", the data on your device is erased immediately and we remove your bank connections and delete your account by the last day of that calendar month (Plaid bills each connection per calendar month); until then you can restore the connections by signing back in with the same account, if a copy encrypted with your recovery key exists. For complimentary (permanent) beta access, we remove your bank connections after 90 days without you opening the App; the beta access itself continues and you can link again. Beta access is by invitation, may be time-limited, and may be changed or ended at our discretion.
 
 ## 5. Changes to the service and terms
 
