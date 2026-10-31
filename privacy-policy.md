@@ -1,6 +1,6 @@
 # BLO VAULT Privacy Policy
 
-**Last Updated:** October 29, 2026
+**Last Updated:** October 30, 2026
 
 BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong). We designed the App so that sensitive financial details stay on your device whenever possible.
 
@@ -20,6 +20,7 @@ BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Priv
 - Free trial: 30 days from when your pseudonymous account is created. When the trial, a subscription, or beta access ends, we remove your bank connections at Plaid; data already on your device stays until you delete it.
 - Diagnostics: if enabled, Sentry may receive crash/performance data with client-side scrubbing of identifiable user fields.
 - Sign in with Apple: on iOS, Sign in with Apple is the primary sign-in, so the same account follows you across devices and reinstalls. We receive your Apple user identifier and, if you choose to share it, your email address or an Apple Hide My Email relay address.
+- Apple Card and Apple Cash (iOS, optional): if you choose "Add Apple Card", the App reads the Apple Card and Apple Cash accounts you allow, with their balances and transactions, through Apple's FinanceKit on your iPhone. This data stays in your encrypted vault on the device and is never sent to our servers.
 - iCloud backup (iOS, on by default, can be turned off in Settings): an encrypted copy of your vault is kept in the App's private iCloud storage under your Apple ID. We cannot read it. Anyone who controls your Apple ID and a trusted device can restore it (see 5.1).
 - You can wipe local data with Panic Delete in Settings, disconnect Plaid items as described below, and permanently delete your account with "Delete account permanently".
 
@@ -41,6 +42,10 @@ Categories Plaid may share with the App can include institution and account iden
 ### 2.1 Optional in-app feedback
 
 If you use the feedback feature (for example, Settings → Send feedback), you may submit a text message and optionally attach a screenshot. We store that content on our backend (Supabase, including file storage for images) to triage bugs, improve the App, and respond when needed. It may be associated with your pseudonymous Supabase user identifier. Do not include passwords, full account numbers, card numbers, or other secrets in feedback text. Screenshots may unintentionally show sensitive information — crop or avoid sensitive screens if you prefer not to share them. Each report also includes the App version, iOS version, and device model. You may optionally add an email address for a reply and, for problem reports, sync diagnostics (bank connection status and recent sync times, without balances, amounts, or merchant names). We use this only to respond to your report and fix problems, and it is deleted when you delete your account.
+
+### 2.2 Apple card and Apple cash (financekit, iOS)
+
+If you tap "Add Apple Card", iOS asks for your permission and lets you choose which accounts to share. With that permission the App reads those accounts, their balances and their transactions through Apple's FinanceKit framework, on your device only. The data is stored in your encrypted on-device vault and in your encrypted backups (5.1, 5.2), is used only to show your balances, spending, statement cycles and cash flow in the App, and is never sent to our servers or to third parties, including AI services. You can stop sharing at any time in iOS settings or by removing the account in the App, which deletes its data from this device.
 
 ## 3. Local AI processing
 
