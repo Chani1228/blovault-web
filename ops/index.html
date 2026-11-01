@@ -570,7 +570,11 @@ body.mopen{overflow:hidden}
   P.plaid=()=>{
     const p=snap.plaid||{}, bp=p.by_product||{}, cp=p.cost_by_product||{};
     const insts=(p.by_institution_named||Object.entries(p.by_institution||{}).map(([id,n])=>({institution_id:id,name:inst(id),active:n}))).map(x=>({label:x.name||inst(x.institution_id),v:n0(x.active)}));
-    return `<div class="kpis">${[kpi('Billed this month',p.billed_this_month??p.active_items??'—',`${n0(p.live_items??p.active_items)} live now`),kpi('Transactions Items',n0(bp.transactions),usd(cp.transactions)+' / mo'),kpi('Investments Items',n0(bp.investments),usd(cp.investments)+' / mo'),kpi('Est. total / mo',usd(p.est_monthly_cost_usd))].join('')}</div>
+    const rates=p.rates||[];
+    const rateRows=rates.map(r=>`<tr><td>${esc(r.product)}</td><td class="r num">${usd(r.price_usd)}</td><td>${esc(r.unit)}</td><td>${r.in_estimate?'<span class="pill good">in this estimate</span>':'<span class="pill mute">not in this estimate</span>'}</td><td>${esc(r.note||'')}</td></tr>`);
+    const rateBox=rates.length?`<div class="box" style="margin:12px 0"><h3>Contract rates</h3>${table(['Product','>Price','Unit','Estimate','Note'],rateRows,'')}</div>`:'';
+    return `<div class="kpis">${[kpi('Billed this month',p.billed_this_month??p.active_items??'—',`${n0(p.live_items??p.active_items)} live now`),kpi('Transactions Items',n0(bp.transactions),usd(cp.transactions)+' / mo'),kpi('Investments Items',n0(bp.investments),usd(cp.investments)+' / mo · holdings + transactions'),kpi('Est. total / mo',usd(p.est_monthly_cost_usd))].join('')}</div>
+    ${rateBox}
     <p class="note">${esc(p.cost_basis_note||'')}</p>
     <p class="note">Item details: ${lnk('plaidDebugger')} (search for the short Item id from the table below) · ${lnk('plaidLogs')} · ${lnk('plaidSupport')} · ${lnk('plaidBilling')}</p>
     <div class="grid2">
