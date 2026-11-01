@@ -478,6 +478,12 @@ body.mopen{overflow:hidden}
     return '<div class="bars">'+items.map(i=>`<div class="bar"><span>${esc(i.label)}</span><div class="track"><div class="fill" style="width:${(i.v/max*100).toFixed(1)}%;background:${i.color||color}"></div></div><span class="num">${esc(fmt(i.v))}</span></div>`).join('')+'</div>';
   }
   const wk=s=>{const d=dOf(s);return d?d.toLocaleDateString(undefined,{month:'short',day:'numeric'}):s};
+  const MONTHS_L=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const monthName=s=>{const p=String(s||'').slice(0,7).split('-'); const i=+p[1]-1; return i>=0&&i<12?MONTHS_L[i]+' '+p[0]:(s||'—');};
+  const monthRows=p=>{
+    const rows=[...(p.by_month||[])].reverse();
+    return table(['Month','>Items','>Est. cost','Status'],rows.map(m=>`<tr><td>${esc(monthName(m.billing_month))}</td><td class="r num">${n0(m.billed_items)}</td><td class="r num">${usd(m.est_cost_usd)}</td><td>${m.state==='open'?'<span class="pill info">open</span>':'<span class="pill mute">closed</span>'}</td></tr>`),'No billing months recorded yet.');
+  };
 
   /* ---------- helpers ---------- */
   const kpi=(l,v,s)=>`<div class="kpi"><span class="label">${esc(l)}</span><span class="ico">${svg(iconFor(l))}</span><span class="value num">${esc(v)}</span><span class="sub">${esc(s||'')}</span></div>`;
@@ -538,8 +544,8 @@ body.mopen{overflow:hidden}
     const H=history.map(h=>({label:fmtDate(h.generated_at),...h}));
     return `<div class="kpis">${[
       kpi('Users',u.total??'—',`${n0(u.active_last_7d)} active in 7 days`),
-      kpi('Billed this month',p.billed_this_month??p.active_items??'—',`${n0(p.live_items??p.active_items)} live now`),
-      kpi('Est. Plaid cost / mo',usd(p.est_monthly_cost_usd),'subscription · this UTC month'),
+      kpi('Billed this month',p.billed_this_month??p.active_items??'—',`${monthName(p.billing_month)} · Plaid UTC · ${n0(p.live_items??p.active_items)} live now`),
+      kpi('Est. Plaid cost / mo',usd(p.est_monthly_cost_usd),`${monthName(p.billing_month)} · midnight UTC`),
       kpi('Open inbox items',f.items?open.length:'—',`${n0(f.counts?.pending)} new`),
       kpi('Cleanup job',human(r.mode_hint)||'—',lastRun?'last run '+ago(lastRun.run_at):'no runs yet')].join('')}</div>
     <section><div class="sechead"><h2>Needs attention</h2></div>${attnHtml(attentionRows())}</section>
@@ -547,10 +553,14 @@ body.mopen{overflow:hidden}
       <div class="links">${['plaidLogs','plaidDebugger','plaidSupport','plaidBilling','supabase','supabaseFns','ghReaper'].map(k=>`<a href="${LINKS[k][1]}" target="_blank" rel="noopener">${svg('ext')}<span>${esc(LINKS[k][0])}</span></a>`).join('')}</div></section>
     <section><div class="sechead"><h2>Recent admin activity</h2></div>
       ${table(['When','Action','Summary'],(Array.isArray(snap.audit)?snap.audit:[]).map(a=>`<tr><td>${esc(fmtDT(a.created_at))}</td><td>${esc(human(a.action))}</td><td class="note">${esc(a.summary||a.target||'')}</td></tr>`),'No admin actions recorded yet.')}</section>
-    <section><div class="sechead"><h2>Trends</h2><span class="note">Trend from this device's visits</span></div>
+    <section><div class="sechead"><h2>Plaid billing months</h2><span class="note">UTC months, kept after they close</span></div>
+      ${monthRows(p)}
+      <p class="note">Plaid's month starts at midnight UTC. That is 7:00 PM Central while daylight saving is on, and 6:00 PM Central after the clocks fall back. The headline is the open month. Closed months stay in this list.</p>
+    </section>
+    <section><div class="sechead"><h2>Trends</h2><span class="note">Plaid months from the ledger; other charts from this device's visits</span></div>
       <div class="grid2 g22">
-        <div class="box"><div class="bh"><h3>Billed bank links this month</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.items_billed??h.items_active)})))}</div></div>
-        <div class="box"><div class="bh"><h3>Est. Plaid cost / month</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.est_monthly_cost_usd)})),{fmt:v=>'$'+v.toFixed(2),color:'var(--violet)'})}</div></div>
+        <div class="box"><div class="bh"><h3>Billed Items by month</h3></div><div class="chart">${lineChart((p.by_month||[]).filter(m=>n0(m.billed_items)>0).map(m=>({label:monthName(m.billing_month),v:n0(m.billed_items)})))}</div></div>
+        <div class="box"><div class="bh"><h3>Est. Plaid cost by month</h3></div><div class="chart">${lineChart((p.by_month||[]).filter(m=>n0(m.billed_items)>0).map(m=>({label:monthName(m.billing_month),v:n0(m.est_cost_usd)})),{fmt:v=>'$'+v.toFixed(2),color:'var(--violet)'})}</div></div>
         <div class="box"><div class="bh"><h3>Users</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.users_total)})),{color:'var(--teal)'})}</div></div>
         <div class="box"><div class="bh"><h3>Open inbox items</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.feedback_open)})),{color:'var(--warn)'})}</div></div>
       </div></section>`;
@@ -573,7 +583,8 @@ body.mopen{overflow:hidden}
     const rates=p.rates||[];
     const rateRows=rates.map(r=>`<tr><td>${esc(r.product)}</td><td class="r num">${usd(r.price_usd)}</td><td>${esc(r.unit)}</td><td>${r.in_estimate?'<span class="pill good">in this estimate</span>':'<span class="pill mute">not in this estimate</span>'}</td><td>${esc(r.note||'')}</td></tr>`);
     const rateBox=rates.length?`<div class="box" style="margin:12px 0"><h3>Contract rates</h3>${table(['Product','>Price','Unit','Estimate','Note'],rateRows,'')}</div>`:'';
-    return `<div class="kpis">${[kpi('Billed this month',p.billed_this_month??p.active_items??'—',`${n0(p.live_items??p.active_items)} live now`),kpi('Transactions Items',n0(bp.transactions),usd(cp.transactions)+' / mo'),kpi('Investments Items',n0(bp.investments),usd(cp.investments)+' / mo · holdings + transactions'),kpi('Est. total / mo',usd(p.est_monthly_cost_usd))].join('')}</div>
+    return `<div class="kpis">${[kpi('Billed this month',p.billed_this_month??p.active_items??'—',`${monthName(p.billing_month)} · Plaid UTC · ${n0(p.live_items??p.active_items)} live now`),kpi('Transactions Items',n0(bp.transactions),usd(cp.transactions)+' / mo'),kpi('Investments Items',n0(bp.investments),usd(cp.investments)+' / mo · holdings + transactions'),kpi('Est. total / mo',usd(p.est_monthly_cost_usd),monthName(p.billing_month))].join('')}</div>
+    <div class="box" style="margin:12px 0"><h3>Billing months</h3>${monthRows(p)}<p class="note">Every recorded UTC month. A closed month stays here after Plaid opens the next one at midnight UTC.</p></div>
     ${rateBox}
     <p class="note">${esc(p.cost_basis_note||'')}</p>
     <p class="note">Item details: ${lnk('plaidDebugger')} (search for the short Item id from the table below) · ${lnk('plaidLogs')} · ${lnk('plaidSupport')} · ${lnk('plaidBilling')}</p>
