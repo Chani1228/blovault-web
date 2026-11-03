@@ -566,6 +566,16 @@ body.mopen{overflow:hidden}
         <div class="box"><div class="bh"><h3>Open inbox items</h3></div><div class="chart">${lineChart(H.map(h=>({label:h.label,v:n0(h.feedback_open)})),{color:'var(--warn)'})}</div></div>
       </div></section>`;
   };
+  let selUser=null;
+  const userPanel=()=>{
+    const us=snap.users?.items||[], i=us.findIndex(x=>x.id===selUser); if(i<0) return '';
+    const x=us[i], its=(snap.plaid?.items||[]).filter(it=>it.user_short===x.short&&it.billing_state!=='billed');
+    const canSched=its.some(it=>it.is_active&&!it.removal_scheduled_at), canCancel=its.some(it=>it.removal_scheduled_at);
+    return `<section class="box" style="margin:12px 0"><div class="sechead"><h2>User ${esc(x.short)}${x.invite_note?' · '+esc(x.invite_note):''}</h2></div>
+      <dl class="kv"><dt>Access</dt><dd>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' until '+fmtDate(x.entitlement.expires_at):''):'None'}</dd><dt>Trial ends</dt><dd>${x.entitlement?'—':esc(fmtDate(x.trial_ends_at))}</dd><dt>App version</dt><dd>${esc(x.app_version||'—')}</dd><dt>Last opened</dt><dd>${esc(ago(x.last_active_at))}</dd></dl>
+      ${table(['Item','Institution','Product','State','Removal','Liabilities'],its.map(it=>`<tr><td class="mono">${esc(it.item_id_short)}</td><td>${esc(inst(it.institution_id))}</td><td>${esc(it.product_assumed||'—')}${it.product_known?'':' <span class="note">(guess)</span>'}</td><td>${itemState(it)}</td><td>${it.removal_scheduled_at?'<span class="pill warn">'+esc(fmtDate(it.removal_scheduled_at))+'</span>':'—'}</td><td>${it.liabilities_at?esc(fmtDate(it.liabilities_at)):'—'}</td></tr>`),'No bank connections for this user.')}
+      <div class="acts"><button class="btn" type="button" data-umenu="${i}" aria-haspopup="menu" aria-expanded="false">Actions${svg('chev')}</button>${canSched?'<button class="btn" type="button" data-uact="sched">Schedule Item removal</button>':''}${canCancel?'<button class="btn" type="button" data-uact="cancel">Cancel Item removal</button>':''}<button class="btn" type="button" data-uact="close">Close</button></div></section>`;
+  };
   P.users=()=>{
     const u=snap.users||{}, pc=u.plan_counts||{}, ec=u.entitlement_counts||{};
     const weeks=(u.signups_by_week||[]).map(w=>({label:wk(w.week_start),n:w.count}));
@@ -576,7 +586,8 @@ body.mopen{overflow:hidden}
       <div class="box wide"><h3>Sign-ups per week</h3><div class="chart">${stackedBars(weeks,[['n','New accounts','var(--accent)']])}</div></div>
     </div>
     ${u.trial_ends_note?`<p class="note">${esc(u.trial_ends_note)}</p>`:''}
-    ${table(['User','Plan','Access','>Billed / live','Trial ends','Last opened','Joined','Actions'],(u.items||[]).map((x,i)=>`<tr><td>${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}${x.feature_preview?' <span class="pill info">Preview</span>':''}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${n0(x.items_billed??x.items_active)} / ${n0(x.items_active??0)}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn" type="button" data-umenu="${i}" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for user ${esc(x.short)}">Actions${svg('chev')}</button></td></tr>`),'No users in this snapshot.')}`;
+    ${userPanel()}
+    ${table(['User','Plan','Access','>Billed / live','Trial ends','Last opened','App','Joined','Actions'],(u.items||[]).map((x,i)=>`<tr><td><button class="btn" type="button" data-uopen="${i}" aria-label="Open details for user ${esc(x.short)}">Details</button> ${x.invite_note?`<span class="unote">${esc(x.invite_note)}</span><span class="mono usub">${esc(x.short)}</span>`:`<span class="mono">${esc(x.short)}</span>`}${x.feature_preview?' <span class="pill info">Preview</span>':''}</td><td>${planPill(x)}</td><td>${x.entitlement?esc(human(x.entitlement.source))+(x.entitlement.expires_at?' · until '+fmtDate(x.entitlement.expires_at):''):'—'}</td><td class="r num">${n0(x.items_billed??x.items_active)} / ${n0(x.items_active??0)}</td><td>${x.entitlement?'—':fmtDate(x.trial_ends_at)}</td><td>${esc(ago(x.last_active_at))}</td><td class="mono">${esc(x.app_version||'—')}</td><td>${fmtDate(x.created_at)}</td><td><button class="btn" type="button" data-umenu="${i}" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for user ${esc(x.short)}">Actions${svg('chev')}</button></td></tr>`),'No users in this snapshot.')}`;
   };
   P.plaid=()=>{
     const p=snap.plaid||{}, bp=p.by_product||{}, cp=p.cost_by_product||{};
@@ -593,7 +604,7 @@ body.mopen{overflow:hidden}
       <div class="box"><h3>Links by institution</h3>${hbars(insts)}</div>
       <div class="box"><h3>Est. cost by user</h3>${hbars((p.per_user||[]).map(x=>({label:who(x.user_short),v:n0(x.est_cost)})),{fmt:v=>'$'+v.toFixed(2),color:'var(--violet)'})}</div>
     </div>
-    ${table(['Item','User','Institution','Product (est.)','State','Last webhook','>Age (days)'],(p.items||[]).map(i=>`<tr><td class="mono">${esc(i.item_id_short)}</td><td class="mono">${esc(who(i.user_short))}</td><td>${esc(inst(i.institution_id))}</td><td>${esc(i.product_assumed||'—')}</td><td>${itemState(i)}</td><td>${esc(ago(i.last_webhook_at))}</td><td class="r num">${i.age_days??'—'}</td></tr>`),'No bank connections in this snapshot.')}`;
+    ${table(['Item','User','Institution','Product','State','Last webhook','>Age (days)'],(p.items||[]).map(i=>`<tr><td class="mono">${esc(i.item_id_short)}</td><td class="mono">${esc(who(i.user_short))}</td><td>${esc(inst(i.institution_id))}</td><td>${esc(i.product_assumed||'—')}${i.product_known?'':' <span class="note">(guess)</span>'}</td><td>${itemState(i)}</td><td>${esc(ago(i.last_webhook_at))}</td><td class="r num">${i.age_days??'—'}</td></tr>`),'No bank connections in this snapshot.')}`;
   };
   P.sync=()=>{
     const p=snap.plaid||{}, flags=flagsOf();
@@ -612,7 +623,13 @@ body.mopen{overflow:hidden}
     ${(()=>{const m=reaperMode(), live=m==='live', at=snap.settings?.reaper_mode_updated_at;
       return `<section><div class="sechead"><h2>Controls</h2></div><div class="box"><div class="modebox"><div><div>Current mode: <span class="pill ${live?'bad':'mute'}">${live?'Live':m==='dry_run'?'Dry run':'Unknown'}</span></div><div class="note">${live?'Live: the job removes real bank connections at Plaid.':'Dry run: the job only records what it would remove.'}${at?' Changed '+esc(ago(at))+'.':''}</div></div>
       <div class="acts"><button class="btn${live?'':' danger'}" type="button" data-act="mode"${m?'':' disabled'}>${live?'Switch to dry run':'Switch to live'}</button><button class="btn" type="button" data-act="run">Run now</button></div></div>
+      <p class="note">The cleanup job is LIVE: bank connections are removed automatically when a user's access or 14-day trial ends.</p>
       <p class="note">Scheduled runs: ${lnk('ghReaper')} · ${lnk('supabaseFns')}</p></div></section>`})()}
+    ${(()=>{const rm=snap.removals||{}, pd=rm.pending_deletions||{};
+      return `<section><div class="sechead"><h2>Scheduled removals</h2></div>
+      <div class="kpis">${[kpi('Pending account deletions',n0(pd.count),pd.oldest_scheduled_at?'oldest due '+fmtDate(pd.oldest_scheduled_at):'none waiting')].join('')}</div>
+      ${table(['When','Mode','User','Decision','Error'],(rm.recent_errors||[]).map(x=>`<tr><td>${fmtDT(x.run_at)}</td><td>${esc(human(x.mode)||'')}</td><td class="mono">${esc(x.user_short||'—')}</td><td>${esc(human(x.decision)||'')}</td><td class="note">${esc(x.error||'')}</td></tr>`),'No scheduled-removal errors.')}
+      ${rm.error?`<p class="note">Could not load: ${esc(rm.error)}</p>`:''}</section>`})()}
     <div class="grid2">
       <div class="box wide"><h3>Decisions per day (30 days)</h3><div class="chart">${stackedBars(daily,[['keep','Keep','var(--good)'],['would_remove','Would remove','var(--warn)'],['removed','Removed','var(--violet)'],['error','Error','var(--bad)'],['skip','Skip','var(--fg3)']])}</div></div>
       <div class="box"><h3>Reasons</h3>${hbars(reasons)}</div>
@@ -661,14 +678,16 @@ body.mopen{overflow:hidden}
     const b=snap.beta_invites||{}, t=b.by_tier||{}, ts=testerList();
     const used=ts.filter(x=>x.src).length, unused=n0(b.unused), full=used+unused>=BETA_CEILING;
     const active7=(snap.users?.items||[]).filter(u=>ts.some(x=>x.u===u)&&dOf(u.last_active_at)&&Date.now()-dOf(u.last_active_at)<7*864e5).length;
-    return `<div class="cta"><button class="btn primary" type="button" data-act="invite"${full?' disabled':''}>New invite</button>${full?`<span class="note">Beta is full: ${used} tester(s) + ${unused} unused invite(s) reach the ceiling of ${BETA_CEILING}. <a href="#beta" data-act="invite-force">Issue anyway</a></span>`:`<span class="note">${BETA_CEILING-used-unused} slot(s) left before the ceiling of ${BETA_CEILING}.</span>`}</div>
+    return `<div class="cta"><button class="btn primary" type="button" data-act="invite"${full?' disabled':''}>New invite</button><button class="btn" type="button" data-act="tfremove">Remove TestFlight tester</button>${full?`<span class="note">Beta is full: ${used} tester(s) + ${unused} unused invite(s) reach the ceiling of ${BETA_CEILING}. <a href="#beta" data-act="invite-force">Issue anyway</a></span>`:`<span class="note">${BETA_CEILING-used-unused} slot(s) left before the ceiling of ${BETA_CEILING}.</span>`}</div>
     <div class="kpis">${[kpi('Testers used',`${used} / ${BETA_CEILING}`,'beta access granted'),kpi('Active in 7 days',active7,'testers who opened the app'),kpi('Invites unused',unused,`${n0(b.redeemed)} redeemed`)].join('')}</div>
     ${flagsCard()}
     <section><div class="sechead"><h2>Testers</h2><span class="note">${ts.length} total</span></div>
     <div class="fb">${ts.length?ts.map((x,i)=>{const u=x.u, perm=x.src==='beta_permanent', ended=!x.src||(x.days!=null&&x.days<0);
       const exp=!x.src?'Access ended':perm?'Permanent':x.exp?(x.days<0?'Ended '+fmtDate(x.exp):'Ends '+fmtDate(x.exp)+' · '+x.days+' day'+(x.days===1?'':'s')+' left'):'No expiry';
       const cls=ended?'bad':x.days!=null&&x.days<=7?'warn':'';
-      return `<article class="card tester"><div class="trow"><span class="tname">${esc(x.name)}</span><span class="pill ${perm?'good':x.src?'info':'mute'}">${esc(x.src?(perm?'Permanent':'30-day'):'No access')}</span><span class="mono usub">${esc(u.short)}</span></div><div class="tsub ${cls}">${esc(exp)}</div><div class="tsub">Last opened ${esc(ago(u.last_active_at))} · ${u.items_active??u.institution_count??0} bank link(s)</div><div class="cacts"><button class="btn" type="button" data-tx="ext" data-ti="${i}">+30 days</button>${perm?'':`<button class="btn" type="button" data-tx="perm" data-ti="${i}">Make permanent</button>`}${x.src?`<button class="btn" type="button" data-tx="end" data-ti="${i}">End access</button>`:''}</div></article>`}).join(''):`<div class="empty"><span class="eico neutral">${svg('users')}</span><p>No beta testers yet.</p><p>Create an invite to add the first one.</p></div>`}</div></section>
+      return `<article class="card tester"><div class="trow"><span class="tname">${esc(x.name)}</span><span class="pill ${perm?'good':x.src?'info':'mute'}">${esc(x.src?(perm?'Permanent':'30-day'):'No access')}</span><span class="mono usub">${esc(u.short)}</span></div><div class="tsub ${cls}">${esc(exp)}</div><div class="tsub">Last opened ${esc(ago(u.last_active_at))} · ${u.items_active??u.institution_count??0} bank link(s)</div><div class="cacts">${perm?'':`<button class="btn" type="button" data-tx="ext" data-ti="${i}">+30 days</button>`}${perm?'':`<button class="btn" type="button" data-tx="perm" data-ti="${i}">Make permanent</button>`}${x.src?`<button class="btn" type="button" data-tx="end" data-ti="${i}">End access</button>`:''}</div></article>`}).join(''):`<div class="empty"><span class="eico neutral">${svg('users')}</span><p>No beta testers yet.</p><p>Create an invite to add the first one.</p></div>`}</div></section>
+    <section><div class="sechead"><h2>Review access codes</h2><span class="note">Demo vault for App Review</span></div>
+    ${table(['Code','Note','Created','Status'],(snap.review_codes?.items||[]).map(x=>`<tr><td class="mono">${esc(x.code_masked)}</td><td>${esc(x.note||'')}</td><td>${fmtDate(x.created_at)}</td><td>${x.revoked_at?'<span class="pill mute">revoked '+esc(fmtDate(x.revoked_at))+'</span>':'<span class="pill good">active</span>'}</td></tr>`),snap.review_codes?.error?'Could not load: '+snap.review_codes.error:'No review codes.')}</section>
     <section><div class="sechead"><h2>Invites</h2></div>
     <div class="kpis">${[kpi('Unused codes',unused),kpi('Redeemed',n0(b.redeemed)),kpi('Permanent',`${n0(t.permanent?.redeemed)} / ${n0(t.permanent?.issued)}`,'redeemed / issued'),kpi('30-day',`${n0(t.limited?.redeemed)} / ${n0(t.limited?.issued)}`,'redeemed / issued')].join('')}</div>
     <p class="note">The full code is shown once, right after it is created.</p>
@@ -694,7 +713,7 @@ body.mopen{overflow:hidden}
   const mroot=document.createElement('div'); mroot.className='mback'; mroot.hidden=true; document.body.appendChild(mroot);
   let M=null;
   const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
-  const selOf=el=>{if(!el||!el.getAttribute) return '';for(const a of ['data-umenu','data-inv','data-act','data-shot','data-detail']){if(el.hasAttribute(a)) return '['+a+'="'+el.getAttribute(a)+'"]';}return '';};
+  const selOf=el=>{if(!el||!el.getAttribute) return '';for(const a of ['data-umenu','data-uopen','data-uact','data-inv','data-act','data-shot','data-detail']){if(el.hasAttribute(a)) return '['+a+'="'+el.getAttribute(a)+'"]';}return '';};
   const isVis=(f,v)=>!f.showIf||f.showIf(v);
   const expected=()=>{const c=M.cfg;return typeof c.confirmText==='function'?String(c.confirmText(M.vals)||''):String(c.confirmText||'')};
   const needsConfirm=()=>M.cfg.confirmText!=null&&(!M.cfg.preview||M.phase==='confirm');
@@ -824,7 +843,8 @@ body.mopen{overflow:hidden}
   function openMenu(btn){
     closeMenu();
     const x=(snap.users?.items||[])[+btn.dataset.umenu]; if(!x) return;
-    const items=[['grant','Grant access'],['extend','Extend access'],['revoke','Revoke access','bad'],['preview',x.feature_preview?'Stop seeing hidden features':'See hidden features']];
+    const perm=x.entitlement?.source==='beta_permanent';
+    const items=[['grant','Grant access'],...(perm?[]:[['extend','Extend access']]),['revoke','Revoke access','bad'],['sched','Schedule Item removal'],['cancelrm','Cancel Item removal'],['preview',x.feature_preview?'Stop seeing hidden features':'See hidden features']];
     if(!isAdminRow(x)) items.push(['sep'],['reassign','Move data to another user'],['delete','Delete user','bad']);
     const el=document.createElement('div'); el.className='menu'; el.setAttribute('role','menu'); el.setAttribute('aria-label','Actions for user '+x.short);
     el.innerHTML=items.map(i=>i[0]==='sep'?'<hr role="separator">':`<button type="button" role="menuitem" data-mi="${i[0]}"${i[2]?` class="${i[2]}"`:''}>${esc(i[1])}</button>`).join('');
@@ -870,8 +890,22 @@ body.mopen{overflow:hidden}
       submit:'Extend',toast:r=>r&&r.expires_at?'Access extended until '+fmtDate(r.expires_at):'Access extended',
       run:v=>api('extend_entitlement',{user_id:uidOf(x,v),days:v.pick==='custom'?daysOf(v.days):30})},btn);
   }
+  function actItemRemoval(x,btn,on){
+    openModal({title:on?'Schedule Item removal':'Cancel Item removal',danger:on,
+      intro:userLine(x)+(on?'<p>Schedules this user\u2019s bank connections for removal at the end of this month (UTC). The account and access stay. Plaid bills the full month, so billing stops after that month.</p>':'<p>Clears the scheduled removal on this user\u2019s bank connections.</p>'),
+      fields:idFields(x),validate:v=>uidCheck(x,v),submit:on?'Schedule removal':'Cancel removal',
+      toast:r=>on?n0(r&&r.items_scheduled)+' bank connection(s) scheduled for '+fmtDate(r&&r.removal_scheduled_at):n0(r&&r.items_cancelled)+' scheduled removal(s) cancelled',
+      run:v=>api(on?'schedule_item_removal':'cancel_item_removal',{user_id:uidOf(x,v)})},btn);
+  }
+  function actTfRemove(btn){
+    openModal({title:'Remove TestFlight tester',danger:true,intro:'<p>Removes this email from the Friends beta group. The in-app access is not changed.</p>',
+      fields:[{name:'email',label:'Tester email',type:'email',required:true}],
+      validate:v=>v.email.trim()?'':'Email is required.',submit:'Remove tester',
+      toast:r=>r&&r.testflight==='removed'?'Tester removed from the group':r&&r.testflight==='not_found'?'No tester with that email':'TestFlight: '+((r&&r.testflight_error)||'failed'),
+      run:v=>api('testflight_remove',{email:v.email.trim()})},btn);
+  }
   function actRevoke(x,btn){
-    openModal({title:'Revoke access',intro:userLine(x)+'<p>Removes the beta or owner access. The user keeps the account and any paid App Store subscription.</p>',
+    openModal({title:'Revoke access',intro:userLine(x)+'<p>Removes the beta or owner access. The user keeps the account and any paid App Store subscription.</p><div class="callout bad">The cleanup job is LIVE: once access ends, the user\u2019s bank connections are removed automatically.</div>',
       fields:idFields(x),validate:v=>uidCheck(x,v),danger:true,submit:'Revoke access',toast:'Access revoked',
       run:v=>api('revoke_entitlement',{user_id:uidOf(x,v)})},btn);
   }
@@ -986,7 +1020,7 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
   }
   function actEnd(x,btn){
     const u=x.u;
-    openModal({title:'End access',danger:true,intro:userLine(u)+'<p>Removes the beta access now. The user keeps the account and any paid App Store subscription.</p>',
+    openModal({title:'End access',danger:true,intro:userLine(u)+'<p>Removes the beta access now. The user keeps the account and any paid App Store subscription.</p><div class="callout bad">The cleanup job is LIVE: once access ends, the user\u2019s bank connections are removed automatically.</div>',
       fields:idFields(u),confirmText:v=>(uidOf(u,v)||u.short||'').slice(0,8),validate:v=>uidCheck(u,v),submit:'End access',toast:'Access ended',
       run:v=>api('revoke_entitlement',{user_id:uidOf(u,v)})},btn);
   }
@@ -996,7 +1030,7 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
     try{const r=await api('extend_entitlement',{user_id:uidOf(u),days:30}); toast(r&&r.expires_at?'Extended until '+fmtDate(r.expires_at):'Extended by 30 days'); load();}
     catch(err){toast(errMsg(err)); btn.disabled=false;}
   }
-  const MENU={grant:actGrant,extend:actExtend,revoke:actRevoke,reassign:actReassign,preview:actPreview,delete:actDelete};
+  const MENU={sched:(x,b)=>actItemRemoval(x,b,true),cancelrm:(x,b)=>actItemRemoval(x,b,false),grant:actGrant,extend:actExtend,revoke:actRevoke,reassign:actReassign,preview:actPreview,delete:actDelete};
 
   /* ---------- shell ---------- */
   function updateFade(){
@@ -1095,7 +1129,11 @@ const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No 
     if(um){ if(menu&&menu.btn===um) closeMenu(true); else openMenu(um); return; }
     if(menu&&!menu.el.contains(e.target)) closeMenu();
     const ac=e.target.closest('[data-act]');
-    if(ac&&!ac.disabled){ const k=ac.dataset.act; if(k==='invite'||k==='invite-force'){ if(k==='invite-force') e.preventDefault(); actInvite(ac);} else if(k==='mode') actMode(ac); else if(k==='run') actRun(ac); return; }
+    if(ac&&!ac.disabled){ const k=ac.dataset.act; if(k==='invite'||k==='invite-force'){ if(k==='invite-force') e.preventDefault(); actInvite(ac);} else if(k==='mode') actMode(ac); else if(k==='run') actRun(ac); else if(k==='tfremove') actTfRemove(ac); return; }
+    const ua=e.target.closest('[data-uact]');
+    if(ua){ const x=(snap.users?.items||[]).find(u=>u.id===selUser), k=ua.dataset.uact; if(k==='close'){selUser=null;render();} else if(x) actItemRemoval(x,ua,k==='sched'); return; }
+    const uo=e.target.closest('[data-uopen]');
+    if(uo){ const x=(snap.users?.items||[])[+uo.dataset.uopen]; if(x){selUser=x.id;render();window.scrollTo(0,0);} return; }
     const fg=e.target.closest('[data-flag]'); if(fg){ if(!fg.disabled) toggleFlag(fg.dataset.flag,fg); return; }
     const iv=e.target.closest('[data-inv]');
     if(iv){ const x=(snap.beta_invites?.items||[])[+iv.dataset.inv]; if(x) actRevokeInvite(x,iv); return; }
