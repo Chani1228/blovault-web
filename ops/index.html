@@ -494,6 +494,7 @@ body.mopen{overflow:hidden}
   function itemState(i){
     if(i.billing_state==='billed'||(!i.is_active&&i.billing_state==='billed')) return '<span class="pill warn">billed this month</span>';
     if(!i.is_active) return '<span class="pill mute">'+(i.billing_state==='parked'?'parked':'inactive')+'</span>';
+    if(i.removal_scheduled_at) return '<span class="pill warn">Removal scheduled '+esc(fmtDate(i.removal_scheduled_at))+'</span>';
     const m={pending_disconnect:['Disconnects soon','warn'],pending_expiration:['Consent expiring','warn'],permission_revoked:['Access revoked','bad'],new_accounts_available:['New accounts','info'],login_repaired:['Login repaired','good']}[i.item_status];
     return m?`<span class="pill ${m[1]}">${m[0]}</span>`:'<span class="pill good">healthy</span>';
   }
@@ -883,9 +884,9 @@ body.mopen{overflow:hidden}
   }
   function actDelete(x,btn){
     openModal({title:'Delete user',danger:true,
-      intro:userLine(x)+'<div class="callout bad">This permanently deletes the account. It cannot be undone.</div><p>It removes the user’s bank connections at Plaid, deletes their data on the server, and deletes the account. Bank connections that were linked outside a Plaid user session cannot be removed from the server; they are shown as a count afterwards so you can remove them in the Plaid dashboard.</p>',
-      fields:idFields(x),confirmText:v=>uidOf(x,v).slice(0,8),validate:v=>uidCheck(x,v),submit:'Delete user',
-      toast:r=>n0(r&&r.kept_unassociated_items)?'Data deleted; '+n0(r.kept_unassociated_items)+' bank connection(s) kept':'User deleted',
+      intro:userLine(x)+'<div class="callout bad">This schedules the account for permanent deletion. It cannot be undone.</div><p>Nothing is deleted now. Bank connections and the account are removed at the end of this month (UTC). Plaid bills the full month, so billing stops after that month. Bank connections that were linked outside a Plaid user session cannot be removed from the server; they are shown as a count so you can remove them in the Plaid dashboard.</p>',
+      fields:idFields(x),confirmText:v=>uidOf(x,v).slice(0,8),validate:v=>uidCheck(x,v),submit:'Schedule deletion',
+      toast:r=>r&&r.scheduled?'Deletion scheduled for '+fmtDate(r.removal_scheduled_at)+' (UTC month end); '+n0(r.items_scheduled)+' bank connection(s) scheduled':n0(r&&r.kept_unassociated_items)?'Data deleted; '+n0(r.kept_unassociated_items)+' bank connection(s) kept':'User deleted',
       run:(v,pv,extra)=>api('delete_user',Object.assign({user_id:uidOf(x,v),confirm:uidOf(x,v).slice(0,8)},extra||{})),
       onError:err=>{
         const b=err.body||{};
@@ -897,7 +898,8 @@ body.mopen{overflow:hidden}
         if(err.status===502&&b.error==='plaid_terminate_failed') return {html:'',subLabel:'Retry',error:'Nothing was deleted. Plaid could not remove the bank connections'+(b.plaid_error?': '+(typeof b.plaid_error==='string'?b.plaid_error:JSON.stringify(b.plaid_error)):'.')};
         return null;
       },
-      done:r=>{if(n0(r.kept_unassociated_items)) return `<div class="callout">The user’s data was deleted, but ${n0(r.kept_unassociated_items)} bank connection(s) were kept and may still bill. The login account was not deleted${r.auth_user_deleted===false?' (auth_user_deleted: false)':''}. Remove the connections in ${lnk('plaidDebugger','the Plaid Item Debugger')}.</div><h3>Deleted rows</h3>${kvHtml(r.deleted_rows)}`;
+      done:r=>{if(r.scheduled) return `<p>Scheduled for ${esc(fmtDate(r.removal_scheduled_at))} (end of month, UTC). ${n0(r.items_scheduled)} bank connection(s) will be removed then; the account is deleted after that. Nothing has been deleted yet.</p>`;
+        if(n0(r.kept_unassociated_items)) return `<div class="callout">The user’s data was deleted, but ${n0(r.kept_unassociated_items)} bank connection(s) were kept and may still bill. The login account was not deleted${r.auth_user_deleted===false?' (auth_user_deleted: false)':''}. Remove the connections in ${lnk('plaidDebugger','the Plaid Item Debugger')}.</div><h3>Deleted rows</h3>${kvHtml(r.deleted_rows)}`;
 const p={terminated:'Bank connections were removed at Plaid.',no_plaid_user:'No Plaid user on record, so no bank connections were removed.',failed:'Plaid removal failed. Check the Plaid dashboard.'}[r.plaid]||('Plaid: '+esc(r.plaid||'unknown'));
         const un=n0(r.unassociated_items);
         return `<p>${esc(p)}</p>${un?`<div class="callout">${un} bank connection(s) were linked outside a Plaid user session and still exist. Remove them in ${lnk('plaidDebugger','the Plaid Item Debugger')}.</div>`:''}<h3>Deleted rows</h3>${kvHtml(r.deleted_rows)}`;}},btn);
