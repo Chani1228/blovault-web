@@ -1,12 +1,12 @@
 # BLO VAULT Privacy Policy
 
-**Last Updated:** November 2, 2026
+**Last Updated:** November 4, 2026
 
 BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong). We designed the App so that sensitive financial details stay on your device whenever possible.
 
 **In-app:** Settings → Data & Privacy → Privacy Policy.  
-**Public copy — GitHub (always works):** https://github.com/Chani1228/blovault-web/blob/main/privacy-policy.md  
-**Easy read — GitHub Pages (enable Pages on repo first):** https://chani1228.github.io/blovault-web/privacy-policy.html
+**Public copy — GitHub (always works):** https://github.com/blovault/blovault-web/blob/main/privacy-policy.md  
+**Easy read — GitHub Pages (enable Pages on repo first):** https://blovault.com/privacy-policy.html
 
 ---
 

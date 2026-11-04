@@ -1,11 +1,11 @@
 # BLO VAULT Terms of Service
 
-**Last Updated:** November 2, 2026
+**Last Updated:** November 4, 2026
 
 **In-app:** Settings → Data & Privacy → Terms of Service.
 
-**Public copy — GitHub:** https://github.com/Chani1228/blovault-web/blob/main/terms-of-service.md  
-**Easy read — GitHub Pages (enable Pages first):** https://chani1228.github.io/blovault-web/terms-of-service.html
+**Public copy — GitHub:** https://github.com/blovault/blovault-web/blob/main/terms-of-service.md  
+**Easy read — GitHub Pages (enable Pages first):** https://blovault.com/terms-of-service.html
 
 ---
 
