@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-kGcylbXgX/HSBhpsFADSzuIXAUs06c0ktx0xtM4ckNU='; connect-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'none'; form-action 'self'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-xKsvCIjpxGEm6aqmO/N2ahtzEPQqH9AVlNDdXr5/CTA='; connect-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; base-uri 'none'; form-action 'self'" />
   <title>BLO VAULT — Document</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -76,7 +76,7 @@
       if (!allowed[q]) q = "privacy-policy.md";
       document.title = "BLO VAULT — " + allowed[q];
       document.getElementById("src").href =
-        "https://github.com/Chani1228/blovault-web/blob/main/" + encodeURIComponent(q);
+        "https://github.com/blovault/blovault-web/blob/main/" + encodeURIComponent(q);
       fetch(q)
         .then(function (r) {
           if (!r.ok) throw new Error("HTTP " + r.status);
@@ -93,7 +93,7 @@
             "Could not load <strong>" +
             q +
             "</strong> here. This page only works when served via <strong>GitHub Pages</strong> from this repo (same-origin fetch). " +
-            'Open the file on GitHub: <a style="color:#00c8d4" href="https://github.com/Chani1228/blovault-web/blob/main/' +
+            'Open the file on GitHub: <a style="color:#00c8d4" href="https://github.com/blovault/blovault-web/blob/main/' +
             encodeURIComponent(q) +
             '">blob view</a> (renders Markdown in the browser).';
           document.body.appendChild(p);
