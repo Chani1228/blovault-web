@@ -1,6 +1,6 @@
 # BLO VAULT Privacy Policy
 
-**Last Updated:** November 4, 2026
+**Last Updated:** November 6, 2026
 
 BLO VAULT ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our mobile application (the "App"). BLO VAULT is operated by an individual developer (Chan Hong). We designed the App so that sensitive financial details stay on your device whenever possible.
 
@@ -112,7 +112,7 @@ Where the GDPR, UK GDPR, or similar laws apply, we rely on contract performance,
 
 ## 10. Data security
 
-We use industry-appropriate measures, including: AES-256 encryption at rest on device; OS secure storage (e.g., iOS Keychain / Android Keystore) for key material; and HTTPS (TLS) for data in transit between the App and our backend and other configured hosts. **Certificate public-key pinning is not enabled in all builds:** where the shipping client includes configured pin hashes and an explicit opt-in build flag, additional certificate checks may apply; otherwise the App relies on the platform’s standard TLS chain validation (including OS trust store updates). We do not claim universal pinning in every distributed build.
+We use industry-appropriate measures, including: AES-256 encryption at rest on device; OS secure storage (e.g., iOS Keychain / Android Keystore) for key material; and HTTPS (TLS) for data in transit between the App and our backend and other configured hosts. The App does not use certificate pinning; it relies on the platform’s standard TLS certificate validation (including OS trust store updates).
 
 ## 11. Your rights (CCPA, U.S. state laws, and others)
 
